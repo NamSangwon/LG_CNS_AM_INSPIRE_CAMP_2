@@ -25,4 +25,7 @@ const TodoListItem = (props) => {
   );
 };
 
-export default TodoListItem;
+// React.memo 를 통해 컴포넌트를 재렌더링하지 않고 마지막으로 렌더링된 결과를 재사용
+//    props가 이전과 동일한 값이면 재렌더링하지 않고, 다른 값이면 재렌더링하여 컴포넌트를 다시 만들어 반환한다.
+//    React.memo에 쓰인 컴포넌트 안에서 구현한 state가 변경되면 컴포넌트는 재렌더링이 된다.
+export default React.memo(TodoListItem);

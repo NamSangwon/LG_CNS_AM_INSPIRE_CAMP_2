@@ -25,22 +25,29 @@ function App() {
     nextId.current++;
   };
 
-  const onRemove = (id) => {
+  // 다시 렌더링하면서 todos 변화하기 때문에 함수가 실행됨
+  //      => 항상 모든 TodoListItem을 필터링 => useCallback을 통해 해결
+  // [](의존성 배열)가 비어 있기 때문에 컴포넌트가 생성될 때만 한 번 실행됨
+  const onRemove = useCallback((id) => {
     setTodos(todos => todos.filter((todo) => todo.id !== id));
-  };
+  }, []);
 
-  const onToggle = (id) => {
+  // 다시 렌더링하면서 todos 변화하기 때문에 함수가 실행됨
+  //     => 항상 모든 TodoListItem을 새로 생성 => useCallback을 통해 해결
+  // [](의존성 배열)가 비어 있기 때문에 컴포넌트가 생성될 때만 한 번 실행됨
+  const onToggle = useCallback((id) => {
     setTodos(todos => 
       todos.map((todo) => 
         todo.id === id ? { ...todo, checked: !todo.checked } : todo
       )
     );
-  };
+  }, []);
 
   return (
     <TodoTemplate>
       <TodoInsert onInsert={onInsert} />
-      <TodoList todos={todos} onRemove={onRemove} 
+      <TodoList todos={todos} 
+                onRemove={onRemove} 
                 onToggle={onToggle} />
     </TodoTemplate>
     
