@@ -2,6 +2,16 @@ import { MdCheckBoxOutlineBlank, MdRemoveCircleOutline, MdCheckBox } from 'react
 import styles from './TodoListItem.module.css';
 import React from 'react';
 
+// props가 이전과 동일한 값이면 재렌더링 X
+// props가 이전과 다른 값이면 재렌더링 O => 컴포넌트 재생성 후 반환
+// 컴포넌트 안에서 구현한 state가 변경 => 재렌더링
+
+// TodoListItem에서는 
+//      1. props.todo가 변경됨에 따라서 재렌더링됨
+//      2. onToggle, onInsert를 통해 변경 및 생성된 TodoListItem 만을 재렌더링함.
+//        (onToggle인 경우 -> props.todo.checked가 변경되기 때문에 컴포넌트를 재생성 후 반환하여 재렌더링)
+//        (onRemove인 경우 -> 해당 컴포넌트가 삭제되기 때문에 상관 X)
+//        (onInsert인 경우 -> 해당 컴포넌트가 생성되기 때문에 첫 렌더링)
 const TodoListItem = (props) => {
   console.log('TodoListItem 생성');
   
