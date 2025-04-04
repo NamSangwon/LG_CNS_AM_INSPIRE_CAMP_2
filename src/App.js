@@ -29,6 +29,9 @@ function App() {
 
   // 함수가 필요할 때마다 다시 함수를 새로 생성하는 것이 아닌
   // 필요할 때마다 메모리에서 가져와서 재사용 (함수 캐싱)
+  
+  // 간단히 [useCallback과 useMemo(React.memo)를 같이 사용하여 불필요한 연산 피함]
+  // useCallback을 사용하지 않으면, 해당 함수를 사용할 때 마다 새로 생성하여 props가 변경되기 때문에 모든 TodoListItem을 재렌더링함
   // [](의존성 배열)가 비어 있기 때문에 컴포넌트가 생성될 때만 한 번 실행됨
   const onInsert = useCallback((text) => {
     const todo = {id: nextId.current, text: text, checked: false};
