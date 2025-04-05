@@ -1,11 +1,16 @@
 import NewsItem from './NewsItem';
 import styles from './NewsList.module.css';
 
-const NewsList = () => {
+const NewsList = ({newsList}) => {
+  console.log("Create NewsList");
+
   return (
     <div className={styles.block}>
-      <NewsItem />
-      <NewsItem />
+      {
+        newsList.map((news) => {
+          return <NewsItem newsData={news}/>
+        })
+      }
     </div>
   );
 };
