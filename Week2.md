@@ -203,13 +203,116 @@
     ```
 
 #### 8. React 조건부 렌더링
-  +
+  + 아래의 방법들을 통해 렌더링을 달리함
+    + `if 문`
+    + `삼항 연산자` 
+    + `인라인 조건` (&& 논리 연산자 사용) ((condition) && (expression) : condition이 만족되면 expression 실행)
+  + 컴포넌트를 렌더링하지 않으려면 `null`을 리턴
   
 #### 9. 데이터 요청
-  +
+  + Request (Client to Server) : **GET**, **POST**, PUT, DELETE (CRUD)
+    + 3가지 요청 데이터 형태
+      + Query Parameter (GET, POST) : ex) `/req/get/?desc=xyz&page=3&title=qwe`
+      + Form Data (Only POST) : ex) `/req/post/`
+      + JSON Data (Only POST) : ex) `/req/post/`
+  + Response (Server to Client) : HTML, JSON, ...
+  + [AJAX (Asynchronous Javascript And XML)](https://blog.naver.com/tex02/223268631883) : JavaScript Old API, **JavaScript New API**, JQuery, **Axios**
   
 #### 10. React 스타일링
-  +
+  + 3가지 방식
+    + Inline : React는 컴포넌트를 통해 가상 DOM을 관리하기 때문에 inline 방식으로 style을 관린하기 좋음
+      + `<div style={{border: '1px solid red'}}>...</div>` 
+    + module-css : 태그에 className을 통해 적용
+      ```
+        // [App.module.css]
+        .border {
+            border: 1px solid red;
+        }
+        ----------------------------
+        import styles from './App.module.css';
+      
+        function Nav() {
+          return (
+            <div className={styles.border}>...</div>
+          )
+        }
+      ``` 
+    + styled-components : Library
+      ```
+        import styled from 'styled-components';
+      
+        const Button = styled.button`
+          color: ${props => props.black ? 'white' : 'black'};
+          background: ${props => props.black ? 'black' : 'white'};
+          border: 1px solid black;
+          &:hover {
+          opacity: 0.8;
+          }
+        `;
+      
+        function App() {
+          return (
+            <div>
+              <Button>Normal</Button>
+              <Button black>Dark</Button>
+            </div>
+          );
+        }
+      ```
   
 #### 11. React Router DOM
-  +
+  + Router : 사용자의 요청을 각 담당 컴포넌트로 연결하는 기능
+    + `<BrowserRouter>` : 애플리케이션 전체를 감싸며 라우팅을 관리
+    + `<Routes>` : 여러 개의 `<Route>`를 표현하기 위한 컴포넌트
+    + `<Route>` : 특정 경로에 해당하는 컴포넌트
+    + `<Link>`, `<NavLink>` : `<a> 태그`를 대신할 수 있는 컴포넌트
+  + **SPA (Single Page Application)**
+    + ~~`<a>` : 페이지 전체를 새로고치며 해당 링크로 이동~~
+    + `<Link>` : 컴포넌트 만을 다시 렌더링 (전체 내용 중 부분 변경)
+    + `<NavLink>` : `<Link>` + 태그에 `class="active"` 속성이 추가됨
+    ```
+      function App() {
+        return (
+          <BrowserRouter>
+            <div>
+              <h1>React Router DOM</h1>
+              <Routes>
+                <Route path='/1' element={<Component1 />} />
+                <Route path='/2' element={<Component2 />} />
+                <Route path='/3' element={<Component3 />} />
+              </Routes>
+            </div>
+          </BrowserRouter>
+        );
+    }
+    ```
+  + **Routing Parameter**
+    + Path Parameter : `URL`에 값을 포함시켜서 전달
+      + ex) URL = `/users/123`, `/board/3`
+      ```
+        function MyComponent() {
+          const { id } = useParams();
+          return (<div>ID: {id}</div>);
+        }
+        function App() {
+          return (
+            <div><Route path="/detail/:id" component={MyComponent} /></div>
+          );
+        }
+      ```
+    + Request Parameter : `?` 기호를 사용하여 `Query String`으로 전달
+      + ex) URL = `/users?id=123`, `/board?num=3`
+      ```
+        function MyComponent() {
+          const location = useLocation();
+          const searchParams = new URLSearchParams(location.search);
+          const id = searchParams.get('id');
+          const name = searchParams.get('name');
+          return (<div>ID-{id}, NAME-{name}</div>);
+        }
+        function App() {
+          return (
+            <div><Route path="/detail" component={MyComponent} /></div>
+          );
+        }
+      ```
