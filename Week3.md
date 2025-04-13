@@ -304,8 +304,9 @@
           </tr>
       </tbody>
   </table>
-  
+    
   + 연산자 우선 순위
+ 
     <table style="border-collapse: collapse; width: 86.9871%; height: 300px;" border="1" data-ke-style="style8">
       <tbody>
           <tr style="height: 20px;">
@@ -524,7 +525,7 @@
           </tr>
       </tbody>
   </table>
-    
+
   + 이항 연산 중 피연산자의 종류가 다르면 **자동 형변환의 규칙**에 따라 `두 피연산자 중 크기가 큰 타입으로 자동 변환`
 
 ### 5. 조건문
