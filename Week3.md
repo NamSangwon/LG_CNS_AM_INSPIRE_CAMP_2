@@ -539,7 +539,60 @@
   + `continue` : continue문 이후의 문장들을 수행하지 않고 다음 반복으로 넘어 감.
 
 ### 7. String 클래스
-  +
+  + **String 참조**
+    + 대입되는 값이 같은 경우 : 힙 영역에 하나의 String 객체만을 생성하여 같은 객체를 참조
+      + `new 연산자`를 사용하여 같은 값을 같더라도 서로 다른 두 객체로써 생성 가능
+    + 대입되는 값이 다른 경우 : 힙 영역에 두 개의 String 객체를 생성하여 각각 객체를 참조
+  + **String 메소드**
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+      <thead style="background-color: #d9edf7; font-weight: bold;">
+        <tr>
+          <th>메소드</th>
+          <th>기능</th>
+          <th>메소드</th>
+          <th>기능</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>equals</td>
+          <td>문자열 비교</td>
+          <td>length</td>
+          <td>문자열 길이</td>
+        </tr>
+        <tr>
+          <td>charAt</td>
+          <td>문자 추출</td>
+          <td>indexOf</td>
+          <td>문자열 위치</td>
+        </tr>
+        <tr>
+          <td>replace</td>
+          <td>문자열 변경</td>
+          <td>replaceAll</td>
+          <td>문자열 변경 (정규 표현식)</td>
+        </tr>
+        <tr>
+          <td>trim</td>
+          <td>공백 제거</td>
+          <td>split</td>
+          <td>구분자 기준 분리</td>
+        </tr>
+        <tr>
+          <td>substring</td>
+          <td>문자열 자르기</td>
+          <td>String.format</td>
+          <td>형식에 맞춰 문자열 생성</td>
+        </tr>
+      </tbody>
+    </table>
+
+  + 문자열 처리 클래스
+    + `String`, `StringBuffer`, `StringBuilder`
+    + 속도 : `String` < `StringBuffer` < `StringBuilder`
+      + `StringBuffer`은 Thread Safe (Synchronized)
+      + `StringBuffer`은 Not Thread Safe
+      + 따라서,  `StringBuffer`는 `StringBuilder`보다 느림
 
 ### 8. 배열
 
