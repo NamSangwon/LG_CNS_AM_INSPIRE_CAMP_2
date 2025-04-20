@@ -37,7 +37,7 @@
     // 추상 클래스 (abstract 키워드 사용)
     public abstract class Animal { 
       // 추상 메소드 (abstract 키워드 사용)
-      // - 추상 클래스 내에서 구현 불가 (중괄호 사용 불가)
+      // - 추상 클래스 내에서 구현 불가 (중괄호 사용 불가) (= 미완성 메소드)
       // - 실체 클래스에서 반드시 추상 메소드를 완성해야 함
       public abstract void sound(); 
     }
@@ -54,6 +54,17 @@
       public int substract(int num1, int num2); // 추상 메소드 (컴파일 시, 자동 변환)
     }
   ```
+  + **람다식**
+    + 메소드를 한 줄로 표현하는 간단한 표현 방법
+    + 하나의 동작만 정의된 인터페이스에만 적용 가능
+      ```java
+        interface Calculator {
+          int add(int a, int b);
+        }
+        
+        Calculator c = (a, b) -> a + b; // 람다식 = (매개변수) -> { 실행문 }
+        System.out.println(c.add(3, 5));
+      ```
 
 ### 6. 접근 제어자
   + 패키지
@@ -106,6 +117,41 @@
       </table>
 
 ### 7. 예외 (Exception)
+  + 종류
+    + 컴파일 오류 (Compile Error) : 컴파일 불가 (ex. `int a = 1.2;`)
+    + 런타임 오류 (Runtime Error) : 실행 중 오류 (ex. `int a = 4 / 0;`)
+    + 논리 오류 (Logical Error) : 버그 (흐름상 잘못된 코딩)
+   
+  + **예외 처리 방법**
+    + **예외 발생 시, 프로그램 종료를 막고 정상 실행을 유지할 수 있도록 처리**
+    + **`try-catch-finally` 블록을 통해 예외 처리 코드 작성**
+      + Exception (일반 예외) : 반드시 작성해야 컴파일 가능
+      + Runtime Exception (실행 예외) : 개발자 경험 의해 작성 (컴파일시 체크 X)
+      + *`catch 문`에 예외의 종류를 입력*
+      +  예외 별로 `catch 문`을 여러 개 사용하여 *다중 예외*를 처리
+    + **`throws`를 통해 예외 떠넘기기**
+      + 일반적으로 도구 및 라이브러리를 개발하는 개발자가 예외 처리를 넘기기 위해 사용
+      ```java
+        public void mehtod1() throws ClassNotFoundException { ... }
+
+        public void method() {
+          try { method1(); }
+          catch(ClassNotFoundException e) {
+            System.out.println(e.getMessage()); // getMessage() : 예외 정보 출력 메소드
+            // e.printStackTrace(); // 예외의 발생 경로를 추적한 내용을 모두 콘솔에 출력하는 메소드
+          } 
+          Finally { ... }
+        }
+      ```
+  + 의도적인 예외 발생 : `throw ner Exception("Error Message");`
+  + 예외 클래스의 계층 구조
+    + `Exception 클래스` : 사용자의 실수와 같은 외적인 요인에 의해 발생하는 예외 **(체크 예외)**
+    + `Runtime Exception 클래스` : 프로그래머의 실수로 발생하는 예외 **(언체크 예외)**
+    + 체크/언체크 예외 : `try-catch 문`을 통해 예외 처리 필요/불필요
+   
+  + 사용자 정의 예외 클래스
+    + 자바 표준 API에서 제공하지 않는 예외를 사용하려는 경우 (ex. 회원 가입 실패 예외 등)
+    + ex) `public Class XXXException extends [Exception | RuntimeException] { ... }`
 
 ### 8. 자바 컬렉션 프레임워크
 
