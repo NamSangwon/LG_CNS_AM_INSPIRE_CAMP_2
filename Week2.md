@@ -2,7 +2,7 @@
 
 ### 1. AJAX
   + 자바스크립트로 서버와 통신하는 방법
-    ```
+    ```javascript
       // 비동기적으로 서버에 요청을 보내 response를 받아 오는 함수
       async function run() {
         const res = await fetch(url); // (1)
@@ -60,7 +60,7 @@
       + 이름 : 소문자는 HTML의 태그로 인식하기 때문에 항상 *대문자*로 시작
     + JSX : XML과 유사한 문법으로서, React 요소를 쉽게 작성
   + 예시 코드
-  ```
+  ```javascript
     // Props = name, content
     function Header({name, content}) {
       return (
@@ -111,7 +111,7 @@
     + 변경 가능 : 변경된 상태를 업데이트하기 위해서 `setState()` 사용
     + `state 값`이 변경되면 해당 컴포넌트를 다시 렌더링 (자식 컴포넌트도 같이 렌더링함)
     + ex)
-      ```
+      ```javascript
         // 초기화
         const [count, setCount] = useState(0);
 
@@ -126,7 +126,7 @@
     + 의존성 배열이 빈 배열이고 콜백 함수를 반환 시, 컴포넌트가 제거될 때만 콜백 함수 동작 
   + **useMemo** : 컴포넌트가 다시 렌더링 될 때, 연산량이 많은 작업이 반복되는 것을 방지하기 위해 사용 (ex. 팩토리얼 계산)
     + 형태 (의존성 배열에는 state 변수를 지정)
-      ```
+      ```javascript
         const memoizedValue = useMemo (()
           // 많은 작업을 수행하는 코드
           return 결과
@@ -150,7 +150,7 @@
     + 사용 목적
       + 저장 공간 관리 (ex. 렌더링 하여도 초기화되지 않는 변수)
       + **DOM 요소에 접근**
-        ```
+        ```javascript
           function Counter() {
             const divRef = useRef();
             const onClick = () => {
@@ -173,7 +173,7 @@
   1. 이벤트 핸들러 함수 정의
   2. 이벤트 핸들러 연결
   3. (필요 시) 이벤트 객체 사용
-  ```
+  ```javascript
     // 1. 이벤트 핸들러 함수 정의
     // 3. 이벤트 객체(e) 사용 
     const onClick = (e) => {
@@ -190,7 +190,7 @@
     }
   ```
   + Argument 전달 방법
-    ```
+    ```javascript
       // click()를 호출할 수 있도록 익명 함수 내에서 실행하도록 함.
       // onClick={click(5)} 과 같이 사용하면, click(5)이 즉시 실행되어, 결과 값이 전달된다.
       function MyButton(props) {
@@ -223,7 +223,7 @@
     + Inline : React는 컴포넌트를 통해 가상 DOM을 관리하기 때문에 inline 방식으로 style을 관린하기 좋음
       + `<div style={{border: '1px solid red'}}>...</div>` 
     + module-css : 태그에 className을 통해 적용
-      ```
+      ```javascript
         // [App.module.css]
         .border {
             border: 1px solid red;
@@ -238,7 +238,7 @@
         }
       ``` 
     + styled-components : Library
-      ```
+      ```javascript
         import styled from 'styled-components';
       
         const Button = styled.button`
@@ -270,7 +270,7 @@
     + ~~`<a>` : 페이지 전체를 새로고치며 해당 링크로 이동~~
     + `<Link>` : 컴포넌트 만을 다시 렌더링 (전체 내용 중 부분 변경)
     + `<NavLink>` : `<Link>` + 태그에 `class="active"` 속성이 추가됨
-    ```
+    ```javascript
       function App() {
         return (
           <BrowserRouter>
@@ -289,7 +289,7 @@
   + **Routing Parameter**
     + Path Parameter : `URL`에 값을 포함시켜서 전달
       + ex) URL = `/users/123`, `/board/3`
-      ```
+      ```javascript
         function MyComponent() {
           const { id } = useParams();
           return (<div>ID: {id}</div>);
@@ -302,7 +302,7 @@
       ```
     + Request Parameter : `?` 기호를 사용하여 `Query String`으로 전달
       + ex) URL = `/users?id=123`, `/board?num=3`
-      ```
+      ```javascript
         function MyComponent() {
           const location = useLocation();
           const searchParams = new URLSearchParams(location.search);
