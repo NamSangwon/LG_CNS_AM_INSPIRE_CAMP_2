@@ -121,7 +121,33 @@
       ```
 ---
 ### 4. Function Group
-
+  + [단일행 함수](https://m.blog.naver.com/doredome/222855964477)
+    ![단일행 함수](https://mblogthumb-phinf.pstatic.net/MjAyMjA4MjNfNzAg/MDAxNjYxMjI4ODU1MDg2.6iKs6sxiOSQ1j2vN7PstgOr_opnpFIklF9-Kic_3PcQg.VdvL2b-rgWeoofH-XHcMqSWm7-ikqgRvzygbEOBqd4Mg.PNG.doredome/image.png?type=w800)
+  + 조건문 (`CASE`)
+    ```sql
+      SELECT 고객아이디, 고객이름, 등급,
+        CASE
+          WHEN 등급='silver' THEN '일반고객'
+          WHEN 등급='gold' THEN '우수고객'
+          WHEN 등급='vip' THEN '최우수고객'
+        END
+      FROM 고객;
+    ```
+  + 집계 함수 : 통계적 계산 결과 검색
+    + 속성 값이 NULL인 경우 제외
+    + SELECT 절 또는 HAVING 절 에서만 사용 가능 (WHERE 절 사용 불가)
+      ![SQL 집계 함수](https://encrypted-tbn0.gstatic.com/imagesq=tbn:ANd9GcRsjnj472_KaXU3R0suUeEOKr2CbcD3eDI9RQ&s);
+  + 그룹별 검색
+    + 특정 속정의 값이 같은 튜플을 모아 그룹을 만들어 그룹별 검색 가능
+    + SELECT 절에는 그룹으로 묶은 속성과 집계 함수만 사용 가능
+    + HAVING 키워드를 이용하여 그룹에 대한 조건 작성 가능
+      ```sql
+        SELECT [DISTINCT] 속성 리스트
+        FROM 테이블 리스트
+        [WHERE 조건]
+        [GROUP BY 속성 리스트 [HAVING 조건]]
+        [ORDER BY 속성 리스트 [ASC | DESC]]
+      ```
 ---
 ### 5. Join
 
