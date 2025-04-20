@@ -136,7 +136,7 @@
     ```
 ---
 ### 4. Function Group
-  + [단일행 함수](https://m.blog.naver.com/doredome/222855964477)
+  + [단일행 함수](https://m.blog.naver.com/doredome/222855964477)  
     ![단일행 함수](https://mblogthumb-phinf.pstatic.net/MjAyMjA4MjNfNzAg/MDAxNjYxMjI4ODU1MDg2.6iKs6sxiOSQ1j2vN7PstgOr_opnpFIklF9-Kic_3PcQg.VdvL2b-rgWeoofH-XHcMqSWm7-ikqgRvzygbEOBqd4Mg.PNG.doredome/image.png?type=w800)
   + 조건문 (`CASE`)
     ```sql
@@ -150,7 +150,7 @@
     ```
   + 집계 함수 : 통계적 계산 결과 검색
     + 속성 값이 NULL인 경우 제외
-    + SELECT 절 또는 HAVING 절 에서만 사용 가능 (WHERE 절 사용 불가)
+    + SELECT 절 또는 HAVING 절 에서만 사용 가능 (WHERE 절 사용 불가)  
       ![SQL 집계 함수](https://velog.velcdn.com/images/h220101/post/77cdfc0b-3889-4bbc-9786-093da0e250cd/image.png)
   + 그룹별 검색
     + 특정 속정의 값이 같은 튜플을 모아 그룹을 만들어 그룹별 검색 가능
