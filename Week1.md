@@ -9,12 +9,12 @@
     + method 속성 : 사용자가 입력한 내용을 제출할 때 사용할 HTTP 의 메소드 지정
     + enctype 속성 : 사용자가 입력한 내용을 제출할 때 Encoding 방법 지정 (주로 파일 업로드 기능 수행 시)
 + **[HTML 태그 및 속성 참고 사이트](https://www.w3schools.com/html/)**
-
+---
 ### 2. CSS
 1. **CSS Selector**
     + HTML 문서의 스타일 및 디자인을 지정하는데 사용
     + 사용 형태
-      ```
+      ```html
       <style>
           h2 { color: purple; }                   <!-- 태그에 스타일 지정 -->
           .class { color: white; }                <!-- 태그 class에 스타일 지정 -->
@@ -53,7 +53,7 @@
     + z-index : 요소가 출력 순서 지정 (큰 값을 가질 수록 가장 앞에서 출력됨)
     + Viewport : 컴퓨터나 스마트폰의 브라우저 화면 크기 설정<br>
     `<meta name="viewport" content="width=device width, initial scale=1.0">`
-
+---
 ### 3. Javascript
 1. 개요 및 출력
    + **\<script\> 태그**에 코드를 작성하거나 **외부 파일**에 작성 후 불러온다.
@@ -76,7 +76,7 @@
         + `===` : 두 변수의 **값과 타입**을 비교 
 4. 함수
    + 함수의 기본 형태
-     ```
+     ```javscript
          function name(param1, param2) {
             // body ...
             return;
@@ -94,7 +94,7 @@
         + 표현식 : `const func = function() {};`
             + Arrow Function : `const func = () => { //logic }`
     + *Closure : 외부 변수를 기억하고 이 외부 변수에 접근할 수 있는 함수를 의미*
-      ```
+      ```javascript
           function sequence() {
               let seq = 0;
               return function () {
@@ -109,7 +109,7 @@
       ```
 5. 클래스 및 객체
     + 클래스 : 프론트엔드에서 중요하게 사용되지 않음
-      ```
+      ```javascript
       class Person {
         name; // 속성 (field)
         age; // 속성 (field)
@@ -121,7 +121,7 @@
         + 프론트엔드에서는 json을 통해 객체를 전송 받아 출력만 하면 되므로 Create, Update, Delete는 사용 X
         + `in` 을 통해 **속성 존재 여부 확인** 후 처리 (오류를 피하기 위함)
         + 반복문을 통해 속성 제어
-          ```
+          ```javascript
           for(const key in obj) {
              console.log(key, obj[key]);
           }
@@ -130,7 +130,7 @@
         + [export & import 를 통해 js 파일의 함수에 접근](https://ko.javascript.info/import-export)
 6. 배열
     + [반복문을 이용한 요소 제어](https://www.w3schools.com/js/js_array_iteration.asp)
-    ```
+    ```javascript
         // 1. for ... in
         for (const key in animals) { console.log(animals[key]) }
     
