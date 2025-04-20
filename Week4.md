@@ -56,6 +56,54 @@
   ```
 
 ### 6. 접근 제어자
+  + 패키지
+    + 클래스를 유일하게 만들어주는 식별자 역할 (물리적인 형태는 파일 시스템의 폴더)
+    + **클래스명이 동일하더라도 패키지가 다르면 다른 클래스로 인식**
+    + 이름 규칙 : `java`로 시작하는 패키지는 `표준 API`에서만 사용 + 모두 소문자
+
+  + 접근 제어자 (Access Modifier)
+    + 클래스 및 클래스의 구성 멤버에 대한 접근을 제한하는 역할
+      <table>
+        <thead>
+          <tr>
+            <td>지시자</td>
+            <td>클래스 내부</td>
+            <td>동일 패키지</td>
+            <td>상속받은 클래스</td>
+            <td>이외의 영역</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>private</td>
+            <td>O</td>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>default</td>
+            <td>O</td>
+            <td>O</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>protected</td>
+            <td>O</td>
+            <td>O</td>
+            <td>O</td>
+            <td>X</td>
+          </tr>
+          <tr>
+            <td>public</td>
+            <td>O</td>
+            <td>O</td>
+            <td>O</td>
+            <td>O</td>
+          </tr>
+        </tbody>
+      </table>
 
 ### 7. 예외 (Exception)
 
