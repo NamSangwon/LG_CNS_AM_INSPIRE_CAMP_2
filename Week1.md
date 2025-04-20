@@ -15,11 +15,11 @@
     + HTML 문서의 스타일 및 디자인을 지정하는데 사용
     + 사용 형태
       ```html
-      <style>
-          h2 { color: purple; }                   <!-- 태그에 스타일 지정 -->
-          .class { color: white; }                <!-- 태그 class에 스타일 지정 -->
-          #id { color: red; font-size: 2rem; }    <!-- 태그 id에 스타일 지정 -->
-      <\style>
+          <style>
+              h2 { color: purple; }                   <!-- 태그에 스타일 지정 -->
+              .class { color: white; }                <!-- 태그 class에 스타일 지정 -->
+              #id { color: red; font-size: 2rem; }    <!-- 태그 id에 스타일 지정 -->
+          <\style>
       ```
     + **[CSS 선택자 참고](https://hyeok999.github.io/2019/09/23/CSS-Selector-Organize/)**
     + **[CSS 가상 요소 및 가상클래스](https://velog.io/@helloworlddddd/CSS-%EA%B0%80%EC%83%81-%EC%84%A0%ED%83%9D%EC%9E%90-%EA%B0%80%EC%83%81-%ED%81%B4%EB%9E%98%EC%8A%A4)**
@@ -76,7 +76,7 @@
         + `===` : 두 변수의 **값과 타입**을 비교 
 4. 함수
    + 함수의 기본 형태
-     ```javscript
+     ```javascript
          function name(param1, param2) {
             // body ...
             return;
