@@ -136,7 +136,7 @@
   + 집계 함수 : 통계적 계산 결과 검색
     + 속성 값이 NULL인 경우 제외
     + SELECT 절 또는 HAVING 절 에서만 사용 가능 (WHERE 절 사용 불가)
-      ![SQL 집계 함수](https://encrypted-tbn0.gstatic.com/imagesq=tbn:ANd9GcRsjnj472_KaXU3R0suUeEOKr2CbcD3eDI9RQ&s);
+      ![SQL 집계 함수](https://velog.velcdn.com/images/h220101/post/77cdfc0b-3889-4bbc-9786-093da0e250cd/image.png)
   + 그룹별 검색
     + 특정 속정의 값이 같은 튜플을 모아 그룹을 만들어 그룹별 검색 가능
     + SELECT 절에는 그룹으로 묶은 속성과 집계 함수만 사용 가능
@@ -150,7 +150,19 @@
       ```
 ---
 ### 5. Join
-
+  + 여러 개의 테이블을 연결하여 하나의 테이블처럼 사용하는 것
+  + 조인 속성 : 조인 검색을 위해 테이블 간의 연결되는 속성 *(일반적으로 외래키가 조인 속성으로 사용)*
+  
+  + [조인의 종류](https://sparkdia.tistory.com/17)
+    + `INNER JOIN`
+      + 매칭되는 데이터만 표현
+      + **Equi 조인** : 가장 일반적으로 사용하는 Equality Condition (=) 에 의한 조인
+      + Non-Equi 조인 : 컬럼 값이 일치하지 않을 때 (<, >, BETWEEN 등 사용)
+    + `SELF JOIN` : Equi 조인과 같으나 하나의 테이블만 사용해서 조인
+    + **`OUTER JOIN`**
+      + 연결되는 컬럼 값이 없더라도 데이터를 검색해주는 조인
+      + 기준이 되는 테이블을 Outer, 반대쪽을 Inner 라고 표현
+      + 종류 : LEFT, RIGHT (+ FULL)
 ---
 ### 6. Subquery
 
