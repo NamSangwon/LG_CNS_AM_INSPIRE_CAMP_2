@@ -119,6 +119,21 @@
         [WHERE 조건]
         [ORDER BY 속성 리스트 [ASC | DESC]];
       ```
+  + 데이터 수정
+    ```sql
+      # WHERE 절을 생략하면 테이블에 존재하는 모든 튜플을 대상으로 수정
+      UPDATE 테이블명
+      SET 속성 이름1 = 값1, 속성 이름2 = 값2, …, 속성 이름n = 값n;
+      [WHERE 조건];
+    ```
+    
+  + 데이터 삭제
+    ```sql
+      # WHERE 절을 생략하면 테이블에 존재하는 모든 튜플을 대상으로 삭제
+      DELETE
+      FROM 테이블명
+      [WHERE 조건];
+    ```
 ---
 ### 4. Function Group
   + [단일행 함수](https://m.blog.naver.com/doredome/222855964477)
@@ -165,5 +180,40 @@
       + 종류 : LEFT, RIGHT (+ FULL)
 ---
 ### 6. Subquery
-
+  + SELECT 문 안에 또 다른 SELECT 문을 포함하는 질의
+  + 소괄호로 묶어서 작성
+  + order by와 limit을 제외한 나머지 절에 사용
+  + 다중 행 부속 질의문은 별도의 연산자를 사용해야 실행 가능
+    <table>
+      <thead>
+        <tr>
+          <td>연산자</td>
+          <td>설명</td>
+          <td>사용 예</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>[NOT] IN</td>
+          <td>부속 질의문의 결과 값 중 <span>일치 여부</span>에 따라 조회</td>
+          <td>직업이 회사원인 고객들이 주문한 일자</td>
+        </tr>
+        <tr>
+          <td>[NOT] EXISTS</td>
+          <td>부속 질의문의 결과 값 중 <span>존재 여부</span>에 따라 조회</td>
+          <td>2013년도에 한번도 주문을 한적이 없는 고객의 직업</td>
+        </tr>
+      </tbody>
+    </table>
+  + 사용 예시
+    ```sql
+      # 적립금이 가장 많은 고객의 고객이름과 적립금 검색
+      SELECT 고객이름, 적립금
+      FROM 고객
+      WHERE 적립금 = (
+        SELECT MAX(적립금)
+        FROM 고객
+      );
+    ```
+  + 데이터베이스 성능에 영향을 줄 수 있음 (성능 저하)
 ---
