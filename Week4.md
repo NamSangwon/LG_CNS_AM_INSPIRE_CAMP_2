@@ -155,10 +155,10 @@
 ---
 ### 8. 자바 컬렉션 프레임워크
   + 프로그램 구현에 필요한 자료구조를 구현해 놓은 라이브러리 (java.util 패키지에 구현되어 있음)
-  + 종류 (인터페이스)
-    + `List` : **`ArrayList`**, `Vector`, `LinkedList`, **`Stack`**, **`Queue`**
-    + `Set` : **`HashSet`**, `TreeSet`
-    + `Map` : **`HashMap`**, `Hashtable`, `TreeMap`, `Properties`
+  + 종류
+    + `List` 인터페이스 : **`ArrayList`**, `Vector`, `LinkedList`, **`Stack`**, **`Queue`**
+    + `Set` 인터페이스 : **`HashSet`**, `TreeSet`
+    + `Map` 인터페이스 : **`HashMap`**, `Hashtable`, `TreeMap`, `Properties`
       
   + **`Generic`**
     + 컴파일하면서 타입을 검사하는 문법
@@ -172,9 +172,121 @@
     + `next()` 메소드를 통해 다음에 있는 요소를 반환
 ---
 ### 9. I/O Stream
+  + 종류
+    + `Byte Stream` : 바이너리 데이터 (인코딩 X)
+    + `Character Stream` : 문자 데이터 (UTF-8, EUC-KR 등과 같은 형식으로 인코딩된 데이터)
+    + 데이터를 복사할 경우, 안전성을 위해 Byte Stream 사용
+    <table>
+      <thead>
+        <tr>
+          <td rowspan=2>구분</td>
+          <td colspan=2>바이트 기반 스트림</td>
+          <!-- <td colspan=2>바이트 기반 스트림</td> -->
+          <td colspan=2>문자 기반 스트림</td>
+          <!-- <td colspan=2>문자 기반 스트림</td> -->
+        </tr>
+        <tr>
+          <!-- <td rowspan=2>구분</td> -->
+          <td>입력 스트림</td>
+          <td>출력 스트림</td>
+          <td>입력 스트림</td>
+          <td>출력 스트림</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>최상위 클래스</td>
+          <td>InputStream</td>
+          <td>OutputStream</td>
+          <td>Reader</td>
+          <td>Writer</td>
+        </tr>
+        <tr>
+          <td>하위 클래스</td>
+          <td>XXXInputStream<br>(File/Buffered/Data)</td>
+          <td>XXXOutputStream<br>(File/Print/Buffered/Data)</td>
+          <td>XXXReader<br>(File/Buffered/InputStream)</td>
+          <td>XXXWriter<br>(File/Buffered/Print/OutputStream)</td>
+        </tr>
+      </tbody>
+    </table>
 
+  + 보조 스트림
+    + 다른 스트림과 연결되어 여러가지 편리한 기능을 제공하는 스트림
+    + Input/OutputStream, Reader/Writer 와 연결하여 입출력 수행
+    ```java
+      // 보조 스트림 예시
+      InputStream in = new FileInputStream("character stream data.txt");
+      InputStreamReader isr = new InputStreamReader(in); // 보조 스트림 1
+      BufferedReader reader = new BufferedReader(isr); // 보조 스트림 2
+    
+      OutputStream out = new FileOutputStream("character stream data copy.txt");
+      OutputStreamWriter osw = new OutputStreamWriter(out); // 보조 스트림 1
+      BufferedWriter writer = new BufferedWriter(osw); // 보조 스트림 2
+    ```
+  + File 클래스
+    + [다양한 메소드](https://www.geeksforgeeks.org/file-class-in-java/)들을 사용하여 파일 및 폴더 제어
 ---
 ### 10. 쓰레드
+  + `프로세스`
+    +  **실행 중인 하나의 프로그램**
+    +  **운영체제로부터 실행에 필요한 메모리를 할당받아 실행**
+      
+  + `쓰레드`
+    + **프로세스 내에서 독립적으로 실행되는 작은 실행 단위**
+    + 한 가지 작업을 실행하기 위해 순차적으로 실행되는 코드 (1개의 쓰레드는 1개의 코드 실행)
+    + 멀티 쓰레드 : 1개의 프로세스 내에서 2가지 이상의 작업을 처리
+
+  + 메인 쓰레드
+    + `main()` 메소드가 실행될 때, 메인 쓰레드가 시작
+    + 필요에 따라 멀티 쓰레드를 만들어 병렬로 코드 실행 가능
+    + 실행 중인 쓰레드가 하나라도 있으면, 프로세스는 종료 X
+  
+  + 작업 쓰레드
+    + 생성 : `Thread 클래스` 또는 `Runnable 인터페이스`를 상속받는 클래스 생성
+      + `Thread 클래스`를 상속한 `MyThread 클래스`를 생성하여 작업 쓰레드 생성
+      + `Thread 클래스` 생성 시, `Runnable 인터페이스`를 상속한 `MyThread 클래스`를 인자로 넘겨 작업 쓰레드 생성
+    + 실행 : 작업 쓰레드의 `start()` 메소드 호출 &rarr; Thread 객체 내의 `run()` 메소드가 실행됨
+      ```java
+        // Thread 클래스 상속
+        public class ThreadExam1 extends Thread {
+          String name;
+          ThreadExam1(String name) { this.name = name; }
+          public void run() { ... }
+        }
+        // Runnable 인터페이스 상속
+        public class ThreadExam2 implements Runnable {
+          String name;
+          ThreadExam2(String name) { this.name = name; }
+          public void run() { ... }
+        }
+
+        public static void main(String[] args)
+        {
+          // Thread 클래스 상속
+          ThreadExam1 t1 = new ThreadExam1("Thread Class");
+      
+          // Runnable 인터페이스 상속
+          ThreadExam2 r = new ThreadExam2("Runnable Interface");
+          Thread t2 = new Thread(r);
+
+          t1.start();
+          t2.start();  
+        }
+      ```
+
+  + 쓰레드 동기화
+    + 하나의 자원(객체)을 공유하는 경우, **동시성 오류** 주의
+    + 오류를 해결하기 위해, 하나의 쓰레드가 사용 중인 객체는 다른 쓰레드가 접근할 수 없도록 잠금
+    + `synchronized` 키워드 사용
+      1. `synchronized` 메소드
+        + 메소드 전체에 대해 동기화 적용
+        + 코드가 간결하고 메소드 내의 전체 코드 보호
+        + 불필요한 블로킹이 발생될 수 있음
+      2. `synchronized` 블록
+         + 블록 구간 내에 동기화
+         + 코드가 조금 더 복잡해질 수 있지만 정밀하게 제어할 수 있음
+         + 필요한 부분만 잠그므로 성능에 효율적
 
 ---
 ### 11. JDBC
