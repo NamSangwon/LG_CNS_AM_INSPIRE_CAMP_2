@@ -280,9 +280,9 @@
     + 오류를 해결하기 위해, 하나의 쓰레드가 사용 중인 객체는 다른 쓰레드가 접근할 수 없도록 잠금
     + `synchronized` 키워드 사용
       1. `synchronized` 메소드
-        + 메소드 전체에 대해 동기화 적용
-        + 코드가 간결하고 메소드 내의 전체 코드 보호
-        + 불필요한 블로킹이 발생될 수 있음
+          + 메소드 전체에 대해 동기화 적용
+          + 코드가 간결하고 메소드 내의 전체 코드 보호
+          + 불필요한 블로킹이 발생될 수 있음
       2. `synchronized` 블록
          + 블록 구간 내에 동기화
          + 코드가 조금 더 복잡해질 수 있지만 정밀하게 제어할 수 있음
@@ -290,9 +290,13 @@
 
 ---
 ### 11. JDBC
-
----
-
-### 1. Database
-
----
+  + 자바에서 데이터베이스에 접속할 수 있도록 하는 자바 API
+  + CRUD (Create / Read / Update / Delete)
+  + JDBC API
+    ![JDBC API](https://blog.kakaocdn.net/dn/uiXug/btsHUIhXpOc/qVR5V3o2uPGzOolhKkoEkK/img.png)
+  + [JDBC 작업 흐름](https://www.devkobe24.com/Java/Java/2024-10-01-jdbc.html)
+    1. 드라이버 로딩
+    2. 데이터베이스 연결
+    3. SQL Query 실행 준비
+    4. SQL Query 실행
+    5. (조회 시) 조회 결과 처리
