@@ -23,17 +23,17 @@
     + **`run()`**
       + (1) `fetch()`를 통해 서버에서 `response`를 받는다.
       + (2) `fetch()`를 마치면, `response` 내의 `json()`를 통해 받아 온 데이터를 json 형식으로 변환한다.
-
+---
 ### 2. DOM
   + Document Object Model
   + HTML의 Tag를 자바스크립트에서 이용할 수 있도록 객체로 만듦
-  + 문서 객체 가져오는 방법 : `document.head`, `document.body`, `document.querySelector('CSS 선
-
+  + 문서 객체 가져오는 방법 : `document.head`, `document.body`, `document.querySelector('CSS 선택자')`
+---
 ### 3. Event
   + [이벤트 종류](https://ko.javascript.info/introduction-browser-events)
   + `preventDefault()` : 태그가 가지는 기본 이벤트를 막음 (ex. `a 태그`, `form의 submit`)
   + `stopPropagation()` : 연쇄 작용 방지 (ex. `<div><p></p></div>`의 `<div>`의 이벤트가 `<p>`에 적용되는 것을 방지)
-
+---
 ### 4. Browser Storage
   + 자바스크립트에 의해 사용자의 PC(브라우저)에 저장되는 파일 (ex. 사용자 로그인 정보)
   + **Cookie**
@@ -49,7 +49,7 @@
     + 객체 저장 가능
     + 브라우저 및 탭 종료 시 삭제
     +  데이터 임시 활용
-   
+--- 
 ### 5. React 기초
   + 특징
     + **가상 DOM** : UI를 변경해야 할 때, 전체 DOM을 업데이트 하는 대신 가상 DOM을 사용하여 필요한 부분만 업데이트
@@ -102,7 +102,7 @@
   + `키`와 `값`으로 이루어진 형태로 컴포넌트에 전달
   + `Props 값`을 변경 :  부모 컴포넌트에서 변경된 값을 전달 &rarr; 자식 컴포넌트를 다시 렌더링
   + ex) `<Header name="WEB" /> => function Header({name}) or function Header(props)`
-    
+---  
 #### 6. React Hook
   + 생명주기 관련 기능을 함수 컴포넌트에서도 사용할 수 있게 지원하는 기술
   + **useState** : 컴포넌트의 상태를 관리하기 위해 사용
@@ -168,7 +168,7 @@
     + 컴포넌트를 재렌더링하지 않고 마지막으로 렌더링된 결과를 재사용
     + 전달 받은 props가 이전과 동일한 값이면 재렌더링하지 않고, 다른 값이면 재렌더링하여 컴포넌트를 다시 만들어 반환
     + 해당 컴포넌트 안에서 구현한 state가 변경되면, 재렌더링
-    
+---
 ### 7. React Event
   1. 이벤트 핸들러 함수 정의
   2. 이벤트 핸들러 연결
@@ -201,14 +201,14 @@
         );
       }
     ```
-
+---
 ### 8. React 조건부 렌더링
   + 아래의 방법들을 통해 렌더링을 달리함
     + `if 문`
     + `삼항 연산자` 
     + `인라인 조건` (&& 논리 연산자 사용) ((condition) && (expression) : condition이 만족되면 expression 실행)
   + 컴포넌트를 렌더링하지 않으려면 `null`을 리턴
-  
+---
 ### 9. 데이터 요청
   + Request (Client to Server) : **GET**, **POST**, PUT, DELETE (CRUD)
     + 3가지 요청 데이터 형태
@@ -217,7 +217,7 @@
       + JSON Data (Only POST) : ex) `/req/post/`
   + Response (Server to Client) : HTML, JSON, ...
   + [AJAX (Asynchronous Javascript And XML)](https://blog.naver.com/tex02/223268631883) : JavaScript Old API, **JavaScript New API**, JQuery, **Axios**
-  
+---
 ### 10. React 스타일링
   + 3가지 방식
     + Inline : React는 컴포넌트를 통해 가상 DOM을 관리하기 때문에 inline 방식으로 style을 관린하기 좋음
@@ -259,7 +259,7 @@
           );
         }
       ```
-  
+---
 ### 11. React Router DOM
   + Router : 사용자의 요청을 각 담당 컴포넌트로 연결하는 기능
     + `<BrowserRouter>` : 애플리케이션 전체를 감싸며 라우팅을 관리
