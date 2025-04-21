@@ -1,6 +1,11 @@
 package com.example.demo.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +25,9 @@ public class HomeController {
     @Autowired Game game;
     // 2. @Component (권장되는 방식)
     @Autowired Bean3 bean3; 
+
+    // JDBC Bean DI
+    @Autowired JdbcTemplate jdbcTemplate;
 
     // home.html 반환
     @GetMapping("/home")
@@ -42,8 +50,10 @@ public class HomeController {
     // home 텍스트 반환
     @GetMapping("/home2")
     @ResponseBody
-    public String home2() {
-        return "home";
+    public List<Map<String, Object>> home2() {
+        String sql = "select * from emp";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        return list;
     }
     
 }
