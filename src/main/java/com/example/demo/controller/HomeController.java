@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.component.Bean3;
 import com.example.demo.component.Game;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class HomeController {
     // Bean 가져오기
+    // 1. @Configuration + @Bean
     @Autowired String bean1;
     @Autowired Game game;
+    // 2. @Component (권장되는 방식)
+    @Autowired Bean3 bean3; 
 
     // home.html 반환
     @GetMapping("/home")
@@ -23,6 +27,7 @@ public class HomeController {
         // Bean 사용
         System.out.println(bean1);
         System.out.println(game.play());
+        System.out.println(bean3.run());
 
         // log level -> trace > debug > info > warn > error
         // debug는 log level이 info 위라서 출력 X
