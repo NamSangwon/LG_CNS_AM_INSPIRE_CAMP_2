@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.component.Bean3;
 import com.example.demo.component.Game;
+import com.example.demo.component.ImageUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,9 +27,6 @@ public class HomeController {
     @Autowired Game game;
     // 2. @Component (권장되는 방식)
     @Autowired Bean3 bean3; 
-
-    // JDBC Bean DI
-    @Autowired JdbcTemplate jdbcTemplate;
 
     // home.html 반환
     @GetMapping("/home")
@@ -47,7 +46,11 @@ public class HomeController {
         return "home";
     }
     
-    // home 텍스트 반환
+
+    // JDBC Bean DI
+    @Autowired JdbcTemplate jdbcTemplate;
+
+    // 데이터베이스 조회 결과 반환
     @GetMapping("/home2")
     @ResponseBody
     public List<Map<String, Object>> home2() {
@@ -56,4 +59,15 @@ public class HomeController {
         return list;
     }
     
+    // ImageUtil Component DI
+    @Autowired ImageUtil imageUtil;
+
+    // 이미지 다운로드
+    @GetMapping("/downImg")
+    @ResponseBody
+    public String downImg() throws IOException {
+        imageUtil.save("http://ggoreb.com/images/luffy.jpg");
+
+        return "Download Image";
+    }
 }
