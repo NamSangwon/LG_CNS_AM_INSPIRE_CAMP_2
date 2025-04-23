@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.DemoMapper">
+    <!-- [SELECT] -->
+    <!-- Map 구조로 반환 -->
+    <select id="select1" resultType="java.util.Map">
+        select * from demo
+    </select>
+    <!-- Demo Model 구조로 반환 -->
+    <select id="select2" resultType="com.example.demo.model.Demo">
+        select * from demo
+    </select>
+
+    <!-- [INSERT] -->
+    <!-- 기본 파라미터로 인자 전달 -->
+    <select id="insert1">
+        insert into demo (seq, user) values (#{param1}, #{param2})
+    </select>
+    <!-- Demo Model로 인자 전달 -->
+    <select id="insert2" parameterType="com.example.demo.model.Demo">
+        insert into demo (seq, user) values (#{seq}, #{user})
+    </select>
+
+    <!-- [DELETE] -->
+    <!-- 기본 파라미터로 인자 전달 -->
+    <select id="delete1">
+        delete from demo where seq = #{param1}
+    </select>
+    <!-- Demo Model로 인자 전달 -->
+    <select id="delete2" parameterType="com.example.demo.model.Demo">
+        delete from demo where seq = #{seq}
+    </select>
+</mapper>
