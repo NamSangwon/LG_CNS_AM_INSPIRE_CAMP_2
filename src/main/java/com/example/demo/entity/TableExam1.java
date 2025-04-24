@@ -3,7 +3,9 @@ package com.example.demo.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Data;
 
+@Data // Lombok - Setter & Getter & Constructor & etc 생성
 @Entity(name = "table_exam_1")
 public class TableExam1 {
     @Id
