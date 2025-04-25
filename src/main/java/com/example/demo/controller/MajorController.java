@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +35,19 @@ public class MajorController {
         List<Major> result = majorRepository.findAll();
 
         return result;
+    }
+    
+    @GetMapping("/find")
+    public Major find(@RequestParam(defaultValue = "1") Integer id) {
+        Major res = new Major();
+
+        Optional<Major> opt = majorRepository.findById(id);
+        if (opt.isPresent())
+        {
+            res = opt.get();
+        }
+
+        return res;
     }
     
     
