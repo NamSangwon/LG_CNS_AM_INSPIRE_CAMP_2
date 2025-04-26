@@ -48,10 +48,71 @@
       + **개발자가 직접** 빈 객체 간의 `의존성 설정`
     + **`SpringBoot`**
       + **`Spring`에서 제공하는 여러 기능들을 자동으로 설정**하여 개발자가 보다 쉽게 사용할 수 있도록 하는 도구
-  
-  + 
 --- 
-### 2. Spring IoC
+### 2. Spring IoC/DI
+  + **`Bean`**
+    + 스프링 컨테이너에서 싱글톤 패턴으로 관리되는 객체
+    + 애플리케이션을 모듈화하고 유지 보수를 용이하게 하는 역할
+    + 다양한 부분에서 재사용되거나 주입되어 사용
+   
+  + **Bean 생성 방법**
+    1. `@Configuration` + `@Bean`
+       + @Configuration 파일의 메소드를 통해 @Bean 객체 반환
+          ```java
+            @Configuration
+            public class BeanConfig {
+              @Bean
+              public String bean1() {
+                return new String("Bean 1");
+              }
+            }
+          ```
+    2. ~~XML 파일 Element 작성~~ (오래된 방식이라, 하락세)
+    3. `@ComponentScan`
+       + 스프링에서 제공하는 4가지 어노테이션을 통해 클래스를 명시하여 Bean으로 등록
+         + `@Component` : 아래 3가지 어노테이션의 상위 객체
+         + `@Controller` : 요청과 응답을 처리하는 클래스에 사용 (ex. Spring MVC)
+         + `@Service` : 비즈니스 로직을 구현하는 클래스에 사용 (ex. Service Class)
+         + `@Repository` : Persistence 역할을 하는 클래스에 사용 (ex. DAO class)
+       ```java
+         @Component
+        public class Bean3 {
+          public String run() {
+            return "Bean 3";
+          }
+        }
+       ```
+  + 빌드 자동화 관리 도구
+    + 필요한 라이브러리 종류와 버전들, 종속성 정보를 명시하여 필요한 라이브러리들을 설정 파일을 통해 자동으로 다운로드 해주고 이를 간편히 관리해주는 도구
+    + `Maven`
+      + Java용 프로젝트 관리 도구
+      + 빌드 중인 프로젝트, 빌드 순서, 다양한 외부 라이브러리 종속성 관계를 `pom.xml 파일`에 명시
+      + 외부저장소에서 필요한 라이브러리와 플러그인들을 다운로드 후, 로컬시스템의 캐시에 모두 저장
+        ```
+          <dependencies>
+             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>7.0.0-M4</version>
+             </dependency>
+          </dependencies>
+        ```
+    + `Gradle`
+      + Groovy 언어를 사용한 Domain-specific-language를 사용하는 프로젝트 빌드 관리 툴
+      + Gradle은 프로젝트의 어느 부분이 업데이트되었는지 알기 때문에, 빌드에 점진적으로 추가 가능
+      + 업데이트가 이미 반영된 빌드의 부분은 즉 더이상 재실행 X &rarr; 빌드 시간 단축 가능
+        ```
+          dependencies {
+            implementation("org.springframework:spring-core:7.0.0-M4")
+          }
+        ```
+    + Maven vs Gradle
+      + Maven은 고정적이고 선형적인 단계의 모델을 기반 vs Gradle은 작업 의존성 그래프를 기반
+      + Maven의 경우 멀티 프로젝트에서 특정 설정을 다른 모듈에서 사용하려면 상속 vs Gradle 은 설정 주입 방식
+      + Maven & Gradle 모두 다중 모듈 빌드를 병렬로 실행 가능
+      + Gradle은 이미 업데이트된 테스크에 대해서는 작업이 실행되지 않으므로 빌드 시간이 훨씬 단축
+      + Gradle은 concurrent에 안전한 캐시 허용
+      + 속도나 캐시 사용 안전성에 대하여 당연히 **Gradle로 사용하는게 이득이겠다는 생각**
 --- 
 ### 3. Spring MVC
 --- 
