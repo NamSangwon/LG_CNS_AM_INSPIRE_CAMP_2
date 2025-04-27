@@ -404,13 +404,15 @@
         }
       ```
       + `@Entity` (필수) : JPA가 관리할 객체로 등록
+        + 클래스 멤버 변수가 테이블의 칼럼으로 적용 시, Camel Case &rarr; Snake Case로 변경
+        + 데이터가 `null` 값이면, 기본 자료형으로 처리 불가 &rarr; `Wrapper 클래스` 사용
       + `@Id` (필수) : 기본키로 사용될 값을 지정
         + `@GeneratedValue`
-          + IDENTITY : 데이터베이스에 위임 (auto_increment)
-          + SEQUENCE : 오라클 등의 시퀀스 객체 사용 
-          + TABLE : KEY룰 관리하는 테이블 사용
-          + UUID : 겹칠 확률이 매우 낮은 식별자 생성
-          + AUTO (default) : 위 전략 중 자동으로 선택
+          + `IDENTITY` : 데이터베이스에 위임 (auto_increment)
+          + `SEQUENCE` : 오라클 등의 시퀀스 객체 사용 
+          + `TABLE` : KEY룰 관리하는 테이블 사용
+          + `UUID` : 겹칠 확률이 매우 낮은 식별자 생성
+          + `AUTO (default)` : 위 전략 중 자동으로 선택
       + `@Table` : Entity와 매핑할 테이블 이름 명시 (생략 시, Entity 이름을 테이블 이름으로 판단)
       + `@Column` : 테이블 칼럼과 관련된 속성 지정 (ex. nullable, length, ...)
       + `@Enumerated` : 열거형 데이터 (ex. ORDINAL, STRING, ...)
@@ -453,12 +455,12 @@
               ServiceCenter result = serviceCenterRepository.save(sc);
               return result;
             }
-          @GetMapping("/sc/list")
-          @ResponseBody
-          public List<ServiceCenter> scList() {
-            List<ServiceCenter> result = serviceCenterRepository.findAll();
-            return result;
-          }
+            @GetMapping("/sc/list")
+            @ResponseBody
+            public List<ServiceCenter> scList() {
+              List<ServiceCenter> result = serviceCenterRepository.findAll();
+              return result;
+            }
           ```
     + [ 페이징 및 정렬 ]
       + `Pageable 인터페이스` 사용
@@ -480,5 +482,46 @@
           }
         ```
     + **[ 연관관계 ]**
+      + 객체 간의 관계를 표현하고 데이터베이스 테이블 간의 관계를 연결하는 역할 (단방향/양방향)
+      + `@ManyToOne` : 다대일 관계 표현
+      + `@JoinColumn` : 외래키 지정
+      + `@OneToMany` : 일대다 관계 표현
+      + [ [사용 예시](https://github.com/NamSangwon/LG_CNS_AM_INSPIRE_CAMP_2/commit/49389ff4639853c4208dad7ac09d546dc15a63f6) ]
+        + `Player`
+          ```java
+          public class Player {
+            @Id
+            int playerId;
+            String playerName;
+            @ManyToOne
+            // 외래키 명시
+            @JoinColumn(name="team_id")
+            Team team;
+          }
+          ```
+        + `Team`
+          + 단방향
+            ```java
+              public class Team {
+                @Id
+                int teamId;
+                String teamName;
+              }
+            ```
+          + 양방향
+            ```java
+              public class Team {
+                @Id
+                int teamId;
+                String teamName;
+                @OneToMany(mappedBy = "team") // Player Entity의 Team 변수명
+                List<Player> players = new ArrayList<>();
+              }
+            ```
+      + [ 발생하는 문제 ]
+        + `Lazy`
+        + `순환 참조`
+        + `N + 1`
+    + [ JUnit ]
     + [ QueryMethod ]
 --- 
