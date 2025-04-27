@@ -558,14 +558,14 @@
           + [ 즉시/지연 로딩에서의 문제 ]
             + `Fetch Join`로 해결 : 지연 로딩이 걸려있는 연관 관계에 대해서 한 번에 같이 즉시 로딩
             + `@EntityGraph`로 해결 : `Fetch Join`의 하드 코딩을 최소화하는 방법
-            + But, Pagination or 2개 이상의 collection join에서 해결 불가
-          + [ Pagination에서의 문제 ]
-            + fetch join 시 limit, offset을 통한 쿼리가 아닌 인메모리에 모두 가져와 application단에서 처리하여 OOM(Out Of Memory) 발생
-            + BatchSize를 통해 필요 시 배치 쿼리로 원하는 만큼 쿼리를 날림 > 쿼리는 날아가지만 N번 만큼의 무수한 쿼리는 발생되지 않음
-          + [ 2개 이상의 Collection Join에서의 문제 ]
-            + List 자료구조의 2개 이상의 Collection join(~ToMany관계)에서 fetch join 할 경우 MultipleBagFetchException 예외 발생
-            + Set자료구조를 사용한다면 해결가능 (Pagination은 여전히 발생)
-            + BatchSize를 사용한다면 해결가능 (Pagination 해결)
+            + But, `Pagination` or `2개 이상의 collection join`에서 해결 불가
+          + [ `Pagination`에서의 문제 ]
+            + `fetch join` 시 limit, offset을 통한 쿼리가 아닌 `인메모리`에 모두 가져와 application단에서 처리하여 `OOM(Out Of Memory)` 발생
+            + `BatchSize`를 통해 필요 시 배치 쿼리로 원하는 만큼 쿼리를 날림 > 쿼리는 날아가지만 N번 만큼의 무수한 쿼리는 발생되지 않음
+          + [ `2개 이상의 Collection Join`에서의 문제 ]
+            + `List` 자료구조의 `2개 이상의 Collection join(~ToMany관계)`에서 `fetch join` 할 경우 `MultipleBagFetchException` 예외 발생
+            + `Set` 자료구조를 사용한다면 해결가능 (`Pagination`은 여전히 발생)
+            + `BatchSize`를 사용한다면 해결가능 (`Pagination` 해결)
         
   + [ `DTO` 변환 필요성 ]
     + 프로세스 간에 데이터를 전달하는 객체(DTO, Data Transfer Object) 사용
