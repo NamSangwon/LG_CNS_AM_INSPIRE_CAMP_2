@@ -389,20 +389,21 @@
         + 스테이징 및 운영 서버 : `validate` or `none`
         + 개발 초기 : `create` or `update`
         + 테스트용 서버 : `update` or `validate`
-    + [ `Mapping Annotation` ]
-      ```java
-        @Entity(name = "table_exam_1")
-        public class TableExam1 {
-          @Id
-          Integer id;
-          @Column(length = 100, nullable = false)
-          String title;
-          @Column(name = "description", length = 1000, nullable = true)
-          String content;
-          Long price;
-          String brand;
-        }
-      ```
+    + `Mapping Annotation`
+      + 사용 예시
+        ```java
+          @Entity(name = "table_exam_1")
+          public class TableExam1 {
+            @Id
+            Integer id;
+            @Column(length = 100, nullable = false)
+            String title;
+            @Column(name = "description", length = 1000, nullable = true)
+            String content;
+            Long price;
+            String brand;
+          }
+        ```
       + `@Entity` (필수) : JPA가 관리할 객체로 등록
         + 클래스 멤버 변수가 테이블의 칼럼으로 적용 시, Camel Case &rarr; Snake Case로 변경
         + 데이터가 `null` 값이면, 기본 자료형으로 처리 불가 &rarr; `Wrapper 클래스` 사용
@@ -565,6 +566,16 @@
             + List 자료구조의 2개 이상의 Collection join(~ToMany관계)에서 fetch join 할 경우 MultipleBagFetchException 예외 발생
             + Set자료구조를 사용한다면 해결가능 (Pagination은 여전히 발생)
             + BatchSize를 사용한다면 해결가능 (Pagination 해결)
+        
+  + [ `DTO` 변환 필요성 ]
+    + 프로세스 간에 데이터를 전달하는 객체(DTO, Data Transfer Object) 사용
+    + API의 응답을 세분화하여 필요한 상황에 맞는 필요한 필드만 DTO로 매핑하여 리턴
+    + [ 장점 ]
+      + 데이터 크기 조절 가능 (응답에 필요 없는 오버헤드를 줄일 수 있음)
+      + DTO를 통해 명확하고 간결한 코드 작성 가능
+      + DTO대신 Entity를 사용하면 Entity 구조가 모두 노출되어 보안에 취약
+      + 응답할 데이터를 API마다 달리함 &rarr; 유지 보수성 향상
+              
     + [ JUnit ]
       + 단위 테스트 프레임워크
       + 기능을 테스트하고 검증할 때, 사용
@@ -602,6 +613,3 @@
       + 메소드 이름을 통해 SQL을 생성하는 방식
       + 인터페이스 작성 시, JPA가 SQL을 구현
       + 규칙 : `리턴타입``접두어``도입부``By``속성표현식``조건식``And/Or``속성표현식``조건식``정렬조건``(매개변수)`
-        
-  + `DTO` 변환 : API의 응답을 세분화하여 필요한 상황에 맞는 필요한 필드만 DTO로 매핑하여 리턴
---- 
