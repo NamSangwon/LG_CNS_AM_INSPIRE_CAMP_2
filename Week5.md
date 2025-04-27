@@ -344,11 +344,32 @@
       | C# | Entity Framework, Dapper| LINQ 지원, 경량 ORM인 Dapper도 인기 |
       | Go | GORM, Ent| 코드 생성 기반, 성능 우수 |
       
-  ![image](https://github.com/user-attachments/assets/85133a5b-5f2f-46fd-9da0-1946908c9cc2)
   + `Spring JDBC`
-    + 
+    ![Spring JDBC](https://velog.velcdn.com/images%2Fkoseungbin%2Fpost%2Fffb11dc7-6ca6-4e4d-9071-425cc4f4a4fb%2Fimage.png)
+    + [ [사용 방법](https://github.com/NamSangwon/LG_CNS_AM_INSPIRE_CAMP_2/commit/269efa9265788ccd0bc3de555891f7b58bc05537) ]
+      1. `Model` 클래스 구성 (송수신 데이터 정의)
+      2. `@Repository` 역할을 수행하는 `DAO Class` 생성하여 DB 제어 메소드(직접적인 SQL 명령어) 작성
+      3. `Controller`에서 `DAO Class`를 의존성 주입한 후, `DAO Class`의 DB 제어 메소드 호출
+      + [ 사용 예시 ]
+        + `Map` 형태로 조회
+          + JdbcTemplate의 `queryForList()` 메소드 사용
+        + `Model` 형태로 조회
+          + `RowMapper<T>` 인터페이스의 `mapRow()` 메소드를 오버라이드한 후, 인자로 전달
+          + queryForList()와 같은 기능을 하도록 구현 &rarr; 비효율적인 방식
+        + 데이터 입력 및 삭제
+          + JdbcTemplate의 `update` 메소드를 통해 쿼리 실행
+            
   + `MyBatis`
-    + 
-  + `JPA`
+    ![MyBatis](https://linked2ev.github.io/assets/img/devlog/201909/mybatis-s1.png)
+    + 자바에서 관계형 데이터베이스를 좀 더 쉽게 개발할 수 있도록 하는 프레임워크
+    + SQL 문장들을 별도의 파일로 구성 (SQL 분리) &rarr; 코드의 간결성 및 유지보수성 향상
+    + [ [사용 방법](https://github.com/NamSangwon/LG_CNS_AM_INSPIRE_CAMP_2/commit/81aadae5a143fb504c7603d91df89e924b6ca10b) ]
+      1. `application.properties` : XML 파일 위치 지정
+      2. `Configuration` : Mapper 인터페이스 위치 지정
+      3. `Mapper 인터페이스` : 추상 메소드 생성
+      4. `XML` : Mapper 인터페이스의 메소드 명과 동일한 id 지정 후 SQL 문 작성
+      5. `Controller` : 의존성 주입된 `Mapper 인터페이스`의 추상 메소드 호출
+         
+  + **`JPA`**
     + 
 --- 
