@@ -125,7 +125,7 @@
       + 속도나 캐시 사용 안전성에 대하여 당연히 **Gradle로 사용하는게 이득이겠다는 생각**
 --- 
 ### 3. Spring MVC
-  + `Spring Web MVC`
+  + **`Spring Web MVC`**
     ![Spring Web MVC](https://velog.velcdn.com/images/minpic/post/9dc88eb4-3be5-4d42-a09e-b0f6f173b6bd/image.png)
     + Model – View – Controller 의 약자
     + Presentation 과 Business 를 분리시키기 위해 사용
@@ -136,7 +136,7 @@
       + Parameter 명시 : `@RequestParam`, `@ModelAttribute`, `@PathVariable`
       + JSON Response 명시 : `@ResponseBody`
 
-  + `응답 처리`
+  + **`응답 처리`**
     + 종류 : `HTML` 형식, `JSON` 형식
     + **`HTML Template Response`**
       + 반환 타입 : **`String`**, `void`, `Map`, `Model`, `ModelAndView`, `DTO` 
@@ -195,7 +195,7 @@
              }
            ```
   
-  + `요청 처리`
+  + **`요청 처리`**
     + **`Mapping`**
       + 종류 : **`GET`, `POST`**, `PUT`, `DELETE`
       + `GET` METHOD 사용 예시
@@ -218,11 +218,115 @@
         ```
     + **`Parameter`**
       + 종류 : ~~`HttpServletRequest`~~, **`@RequestParam`, `@ModelAttribute`**, `@RequestBody`, `@PathVariable`
-      + ~~`HttpServletRequest` : 모든 파라미터는 문자열로 전달 (필요 시, 타입 변환하여 사용)~~
-      + **`@RequestParam`**
-      + **`@ModelAttribute`**
-      + `@RequestBody`
-      + `@PathVariable`
+        + ~~`HttpServletRequest` : 모든 파라미터는 문자열로 전달 (필요 시, 타입 변환하여 사용)~~
+        + **`@RequestParam`**
+          + 단순 데이터(ex. 페이지, 검색어, 카테고리 등)에 사용됨
+          + 소괄호를 통해 `defaultValue` 및 `required` 등과 같은 옵션 지정 가능
+          + `@RequestParam("key1")`와 같이 파라미터 명을 지정하지 않으면 변수명을 파라미터 명에 맞춰 사용 必
+          + 사용 예시
+            1. 일반 파라미터 타입
+               ```java
+                 // localhost:8080/req/param1?key1=v1&key2=v2 로 요청
+                 @GetMapping("req/param1")
+                 public String param1(
+                    @RequestParam String key1,
+                    @RequestParam("key2") String key2
+                 ) {
+                    return key1+ ", "+ key2;
+                 }
+               ```
+            2. `Map` 파라미터 타입 (전달된 모든 파라미터를 동적으로 사용)
+               ```java
+                 // localhost:8080/req/param2?search=java&version=1.8 로 요청
+                 @GetMapping("req/param2")
+                 public String param2(@RequestParam Map<String, Object> map) {
+                   return map.toString(); // map : {"search":"java", "version":"1.8"}
+                 }
+               ```
+        + **`@ModelAttribute`**
+          + 복잡한 데이터(ex. `Model`, `DTO`, `VO` 등의 객체)에 사용됨
+          + `MyBatis`, `JPA` 등과 같은 ORM 프레임워크에서 활용됨
+          + `Model`에 작성 되어 있는 변수 명과 자료 형태가 요청 파라미터와 동일하면 자동으로 대입
+          + 사용 예시
+            ```java
+              @GetMapping("req/model")
+              public String model(@ModelAttribute Member member) {
+                return member.toString();
+              }
+            ```
+        + `@PathVariable`
+          + 요청 주소의 경로명 활용 (ex. `/user/abc/1`)
+          + 사용 예시
+            ```java
+              @GetMapping("req/path/{path1}/{path2}")
+              public String path(
+                @PathVariable("path1") String path1,
+                @PathVariable("path2") String path2
+              ) {
+                return path1+ ", "+ path2;
+              }
+            ```
+        + `@RequestBody`
+          + 메소드 방식을 `POST` 요청에서만 사용 가능
+          + AJAX 요청 & JSON 형태의 데이터를 통신 시 주로 사용 (ex. React)
+          + JSON 형태의 파라미터 사용 (ex. Query String Parameter, Form Data, Payload)
+            
+      + AJAX 요청 파라미터 전달 방법
+        1. [GET] Query String
+           ```javascript
+             const url = `http://localhost:8080/register-ajax2?name=${name}&age=${age}&email=${email}`;
+            const res = await fetch(url);
+           ```
+        2. [POST] Form Data
+           ```javascript
+              const formData = new FormData();
+              formData.append("name", name.value);
+              formData.append("age", age.value);
+              formData.append("email", email.value);
+              
+              const res = await fetch(url, {
+                method: 'post',
+                body: formData
+              });
+           ```
+        3. [POST] Json Data
+           ```javascript
+             const obj = {
+                "name": name.value, "age": age.value, "email": email.value
+              };
+              const res = await fetch(url, {
+                method: 'post',
+                headers: { "content-type": 'application/json' },
+                body: JSON.stringify(obj)
+              });
+           ```
+      + **`CORS`**
+        + Cross Origin Resource Sharing의 약자
+        + 브라우저에서 다른 출처(Protocol, Host, Port 동일 여부)의 리소스를 공유하는 방법
+        + **기본적을호 보안을 위해 다른 도메인이나 포트의 요청을 차단**
+        + `@CrossOrigin` 또는 WebMvcConfigurer의 설정을 통해 허용 가능
+        + 필요성 : 프론트와 백엔드의 서버 분리, 다른 출처의 데이터 사용, 마이크로 서비스 아키텍처
+          
+      + **`SWAGGER`**
+        + **`REST API` 문서를 자동으로 생성하는 도구**
+        + 어노테이션
+          + `@Tag`
+            + API를 그룹 별로 정리해주는 역할
+            + ex. `@Tag(name="User API", description="사용자 관련 API")`
+          + `@Operation`
+            + 메소드에 대해 설명하는 역할
+            + ex. `@Operation(summary="사용자 조회", descript="ID를 기준으로 사용자 정보를 조회")`
+              + `summary` : 간단한 설명 (Swagger UI 리스트에 보임)
+              + `description` : 상세 설명 (API 상세 페이지에 보임)
+          + `@Parameter`
+            + 요청 파라미터에 대한 설명
+            + `@RequestParam`, `@PathVariable` 등의 요청 값에 대한 설명을 표시할 때 사용
+            + ex. `@Parameter(description="사용자 이름", example="홍길동")`
+          + `Schema`
+            + `DTO 클래스` 및 `DTO 필드`를 설명하는데 사용
+            + 사용 예시
+              +  DTO 클래스 : `@Schema(description="사용자 응답 객체")`
+              +  DTO 클래스 필드 : `@Schema(description="사용자 이름", example="홍길동")`
 --- 
 ### 4. Spring Database
   + `Spring JDBC`
