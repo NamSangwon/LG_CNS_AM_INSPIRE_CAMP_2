@@ -370,6 +370,115 @@
       4. `XML` : Mapper 인터페이스의 메소드 명과 동일한 id 지정 후 SQL 문 작성
       5. `Controller` : 의존성 주입된 `Mapper 인터페이스`의 추상 메소드 호출
          
-  + **`JPA`**
-    + 
+  + **`JPA (Java Persistence API)`**
+    ![JPA](https://blog.kakaocdn.net/dn/bWYkaF/btqEmu3EfwQ/UcUSJCMK9TEN4fUbmApXW1/img.png)
+    + `ORM 프레임워크` 사용 : 객체는 객체대로, 관계형 데이터베이스는 관계형 데이터베이스대로 설계
+    + [ 특징 ]
+      + DAO와 Database Table의 강한 의존성 문제 해결
+      + Entity를 작성하면 자동으로 Table 생성
+      + SQL 문장을 이용하지 않고 메소드를 호출하면 자동으로 SQL 문장 실행
+      + **유지 보수에 용이 & 특정 DB에 종속적이지 않음(Dialect)**
+    + [ Table 생성 옵션 ]
+      + `create` : 기존 테이블을 삭제 후 생성 (DROP + CREATE)
+      + `create-drop` : create 기능 + DROP (DROP + CREATE + DROP)
+      + `update` : 변경된 내용만 Alter 적용
+      + `validate` : 엔티티와 테이블이 정상 매핑되었는지만 확인
+      + `none` : 자동 생성 기능 사용하지 않음
+      + [ 주의 사항 ]
+        + **운영 서버는 절대 `create`, `create-drop`, `update` 사용 금지**
+        + 스테이징 및 운영 서버 : `validate` or `none`
+        + 개발 초기 : `create` or `update`
+        + 테스트용 서버 : `update` or `validate`
+    + [ `Mapping Annotation` ]
+      ```java
+        @Entity(name = "table_exam_1")
+        public class TableExam1 {
+          @Id
+          Integer id;
+          @Column(length = 100, nullable = false)
+          String title;
+          @Column(name = "description", length = 1000, nullable = true)
+          String content;
+          Long price;
+          String brand;
+        }
+      ```
+      + `@Entity` (필수) : JPA가 관리할 객체로 등록
+      + `@Id` (필수) : 기본키로 사용될 값을 지정
+        + `@GeneratedValue`
+          + IDENTITY : 데이터베이스에 위임 (auto_increment)
+          + SEQUENCE : 오라클 등의 시퀀스 객체 사용 
+          + TABLE : KEY룰 관리하는 테이블 사용
+          + UUID : 겹칠 확률이 매우 낮은 식별자 생성
+          + AUTO (default) : 위 전략 중 자동으로 선택
+      + `@Table` : Entity와 매핑할 테이블 이름 명시 (생략 시, Entity 이름을 테이블 이름으로 판단)
+      + `@Column` : 테이블 칼럼과 관련된 속성 지정 (ex. nullable, length, ...)
+      + `@Enumerated` : 열거형 데이터 (ex. ORDINAL, STRING, ...)
+      + `@Temporal` : 날짜 데이터 (ex. DATE, TIME, TIMESTAMP)
+      + `@Lob` : 대용량 데이터 (ex. CLOB(char), BLOB(byte))
+      + `@Transient` : DB에 저장하거나 조회가 필요 없는 데이터 (ex. 비밀번호 확인, 가입 시 약관에 동의)
+    + **[ Repository 인터페이스 ]**
+      + 데이터를 입력 / 조회 / 수정 / 삭제 하기 위해서 사용
+      + **객체 (Entity) 와 관계형 데이터베이스를 매핑하여 데이터베이스의 SQL을 자동으로 생성**
+      + SQL 자동 생성 메소드 제공
+        + 입력/수정 : `save()`
+        + 삭제 : `delete()`
+        + 조회 : `findById()` or `findAll()`
+      + 사용 예시
+        + Entity
+          ```java
+            @Entity
+            @Data
+            public class ServiceCenter {
+              @Id
+              @GeneratedValue
+              Integer id;
+              String customer;
+            }
+          ```
+        + Repository
+          ```java
+            @Repository
+            public interface ServiceCenterRepository
+              extends JpaRepository<ServiceCenter, Integer> {
+            }
+          ```
+        + Controller
+          ```java
+            @Autowired
+            ServiceCenterRepository serviceCenterRepository;
+            @GetMapping("/sc/add")
+            @ResponseBody
+            public ServiceCenter scAdd(@ModelAttribute ServiceCenter sc) {
+              ServiceCenter result = serviceCenterRepository.save(sc);
+              return result;
+            }
+          @GetMapping("/sc/list")
+          @ResponseBody
+          public List<ServiceCenter> scList() {
+            List<ServiceCenter> result = serviceCenterRepository.findAll();
+            return result;
+          }
+          ```
+    + [ 페이징 및 정렬 ]
+      + `Pageable 인터페이스` 사용
+      + 페이징 : 한 페이지에 보여줄 데이터의 개수를 설정하여 데이터를 페이지 단위로 나눔
+      + 정렬 : 특정 필드를 기준으로 데이터를 정렬하여 조회
+      + 사용 예시
+        ```java
+          void select3() {
+            // 정렬 속성 지정
+            Order order1 = Order.asc("survived");
+            Order order2 = Order.desc("age");
+            Sort sort = Sort.by(order1, order2);
+            // 페이징 방식 지정 (파라미터 : 페이지, 원소 개수, 정렬 방식)
+            Pageable pageable = PageRequest.of(0, 10, sort);
+            // 검색 결과
+            Page<Titanic> list = titanicRepository.findAll(pageable);
+            // 출력
+            list.get().forEach(item -> System.out.println(item));
+          }
+        ```
+    + **[ 연관관계 ]**
+    + [ QueryMethod ]
 --- 
