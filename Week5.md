@@ -329,7 +329,26 @@
               +  DTO 클래스 필드 : `@Schema(description="사용자 이름", example="홍길동")`
 --- 
 ### 4. Spring Database
+  + `ORM`
+    + Object Relational Mapping의 약자
+    + 어플리케이션과 DB 연결 시, SQL언어가 아닌 어플리케이션 개발 언어로 DB 접근할 수 있게 해주는 도구
+    + 개발 언어의 일관성과 가독성을 높임
+    + 객체와 관계형 데이터베이스의 테이블을 자동으로 매핑해주는 기술  
+      | 언어 | 대표 ORM | 특징 요약 |
+      |:----:|:--------:|:---------:|
+      | Java | JPA (Hibernate 등)| 표준 API, 구현체 다양, 가장 많이 사용됨 |
+      | Python | SQLAlchemy, Django ORM| 유연하고 강력, 프레임워크 연동 쉬움 |
+      | JavaScript | TypeORM, Sequelize, Prisma| Type 기반, 프론트와 연동 용이 |
+      | PHP | Eloquent, Doctrine| 사용 간편, Laravel/Symfony에서 활용 |
+      | Ruby | ActiveRecord| Rails 내장, 직관적 DSL 문법 |
+      | C# | Entity Framework, Dapper| LINQ 지원, 경량 ORM인 Dapper도 인기 |
+      | Go | GORM, Ent| 코드 생성 기반, 성능 우수 |
+      
+  ![image](https://github.com/user-attachments/assets/85133a5b-5f2f-46fd-9da0-1946908c9cc2)
   + `Spring JDBC`
+    + 
   + `MyBatis`
+    + 
   + `JPA`
+    + 
 --- 
