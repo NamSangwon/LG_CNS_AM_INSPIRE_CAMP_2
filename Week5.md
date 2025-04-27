@@ -518,10 +518,90 @@
                 List<Player> players = new ArrayList<>();
               }
             ```
-      + [ 발생하는 문제 ]
-        + `Lazy`
-        + `순환 참조`
-        + `N + 1`
+      + **[ 발생하는 문제 ]**
+        + `LazyInitialization` : JPA에서 관리하는 DB 세션이 종료 된 후, 관계가 설정된 엔티티를 참조하려고 할 때 발생
+          + DB 세션 = Persistant Context(영속성 컨텍스트) (트랜잭션과 생명 주기를 같이 함)
+          + [ 해결 방법 ]
+            1. `@OneToMany(fetch=FetchType.EAGER)` (즉시 로딩)
+               + Entity를 조회할 때 연관된 Entity도 함께 조회 (연관된 객체가 모두 영속성 컨텍스트에 생성)
+               + 성능 문제 발생 가능성 有 (권장 X)
+            2. `@Transactional(readOnly = true)`
+               + Repository에서 세션을 시작해 밖에서도 세션이 종료되지 않고 유지하도록 하는 방법
+               + 즉,  `@Transactional`이 명시된 메소드가 종료되면 세션을 종료
+               + `readOnly`를 통해 Dirty Checking을 하지 않도록 하여 성능을 향상시키고, 데이터의 의도하지 않은 변경을 방지
+            3. `Fetch Join (JPQL or QueryDSL)`
+               + 지연 로딩이 걸려있는 연관 관계에 대해서 한 번에 같이 즉시 로딩
+               + Repository에서 JPQL 작성 시, 같이 가져올 데이터를 명시적으로 지정
+            4. `@EntityGraph` (== Fetch Join)
+               + RDB에도 JPA 엔티티와 같이 연관관계가 설정되어 있지 않은 경우
+               + 즉시 로딩으로 연관관계의 객체를 조회해오고 Left Outer Join으로 읽어오도록 함
+               + 연관관계의 상위 엔티티를 중복 조회하기 때문에 JPQL 사용 시, distinct 설정을 사용하거나 Set 컬렉션을 사용하는 것을 권장
+                 
+        + `순환 참조` : 두 개 이상의 빈(Bean)이 서로를 참조할 때 발생하는 문제
+          + [ 해결 방법 ]
+            1. `@ToString(exclude="순환 참조 변수")`
+               + 순환되는 부분을 제외하고 출력하도록 함
+               + 근본적인 해결책 X
+            2. `@JsonIgnore` & `@JsonIgnoreProperties({"posts"})`
+               + JSON 데이터에 해당 프로퍼티는를 포함시키지 않도록 함
+            3. `@JsonManagedReference` + `@JsonBackReference`
+               + 순환 참조 명시
+               + 부모 클래스(Posts entity)의 Comment 필드에 @JsonManagedReference를 추가
+               + 자식 클래스(Comment entity)의 Posts 필드에 @JsonBackReference를 추가
+            4. `DTO 클래스` 사용
+               + 근본적인 원인 : 양방향 매핑이기도 하지만, Entity 자체를 response로 리턴
+               + 따라서, entity 자체를 return 하지 말고 DTO 객체를 만들어 필요한 데이터만 옮겨 담아 리턴
+            
+        + [`N + 1`](https://velog.io/@jinyoungchoi95/JPA-%EB%AA%A8%EB%93%A0-N1-%EB%B0%9C%EC%83%9D-%EC%BC%80%EC%9D%B4%EC%8A%A4%EA%B3%BC-%ED%95%B4%EA%B2%B0%EC%B1%85) : 조회 시 1개의 쿼리 + 나오지 않아도 되는 조회의 쿼리가 N개가 더 발생하는 문제
+          + 예시 : `User` 한 명이 쓴 `Article`들을 조회할 때 `User`-`Article`을 join한 형태의 쿼리문을 원했지만, N개의 `Article`을 또 조회하는 쿼리가 날아가는 경우
+          + [ 즉시/지연 로딩에서의 문제 ]
+            + `Fetch Join`로 해결 : 지연 로딩이 걸려있는 연관 관계에 대해서 한 번에 같이 즉시 로딩
+            + `@EntityGraph`로 해결 : `Fetch Join`의 하드 코딩을 최소화하는 방법
+            + But, Pagination or 2개 이상의 collection join에서 해결 불가
+          + [ Pagination에서의 문제 ]
+            + fetch join 시 limit, offset을 통한 쿼리가 아닌 인메모리에 모두 가져와 application단에서 처리하여 OOM(Out Of Memory) 발생
+            + BatchSize를 통해 필요 시 배치 쿼리로 원하는 만큼 쿼리를 날림 > 쿼리는 날아가지만 N번 만큼의 무수한 쿼리는 발생되지 않음
+          + [ 2개 이상의 Collection Join에서의 문제 ]
+            + List 자료구조의 2개 이상의 Collection join(~ToMany관계)에서 fetch join 할 경우 MultipleBagFetchException 예외 발생
+            + Set자료구조를 사용한다면 해결가능 (Pagination은 여전히 발생)
+            + BatchSize를 사용한다면 해결가능 (Pagination 해결)
     + [ JUnit ]
+      + 단위 테스트 프레임워크
+      + 기능을 테스트하고 검증할 때, 사용
+      + `@Test`가 있는 메소드 단위로 테스트 실행
+      + 사용 예시
+        ```java
+          // JUnit Test
+          @SpringBootTest
+          class DemoApplicationTests {
+            @Autowired AssemblyMemberRepository assemblyMemberRepository;
+          
+            // [데이터 1 건 조회] 테스트
+            @Test
+            void contextLoads() {
+              // Null Pointer Exception 오류를 피하기 위해 Optional<T> 클래스를 사용
+              Optional<AssemblyMember> opt = assemblyMemberRepository.findById(1);
+              
+              AssemblyMember member = new AssemblyMember();
+              if (opt.isPresent())
+              {
+                member = opt.get();
+              }
+          
+              // (In VSC) DEBUG CONSOLE > [Launch Java Tests - ...]에 출력
+              System.out.println(member);
+          
+              // 조회한 결과가 맞는 지, 확인하는 코드 (assertXXX() 메소드)
+              // 조회한 데이터의 id 가 1인지 확인하여, 조회 성공 여부 확인
+              int id = member.getId();
+              assertEquals(1, id);
+            }
+        ```
+        
     + [ QueryMethod ]
+      + 메소드 이름을 통해 SQL을 생성하는 방식
+      + 인터페이스 작성 시, JPA가 SQL을 구현
+      + 규칙 : `리턴타입``접두어``도입부``By``속성표현식``조건식``And/Or``속성표현식``조건식``정렬조건``(매개변수)`
+        
+  + `DTO` 변환 : API의 응답을 세분화하여 필요한 상황에 맞는 필요한 필드만 DTO로 매핑하여 리턴
 --- 
