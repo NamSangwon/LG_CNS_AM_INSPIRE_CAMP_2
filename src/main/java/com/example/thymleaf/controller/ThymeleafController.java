@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ThymeleafController {
@@ -28,7 +29,7 @@ public class ThymeleafController {
     public String userList(Model model) {
         // User List 생성
         List<Map<String, Object>> userList = new ArrayList<>();
-        
+
         // User 1 생성
         Map<String, Object> user = new HashMap<>();
         user.put("userId", "a");
@@ -52,7 +53,16 @@ public class ThymeleafController {
 
         // Model에 데이터 추가
         model.addAttribute("userList", userList);
-        
+
         return "user_list";
+    }
+
+    @GetMapping("mode")
+    public String mode(
+            Model model, @RequestParam Map<String, Object> map) {
+        model.addAttribute("name", map.get("name"));
+        model.addAttribute("auth", map.get("auth"));
+        model.addAttribute("category", map.get("category"));
+        return "mode";
     }
 }
