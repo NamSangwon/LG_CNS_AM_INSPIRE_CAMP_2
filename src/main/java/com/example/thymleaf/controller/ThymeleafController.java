@@ -59,10 +59,28 @@ public class ThymeleafController {
 
     @GetMapping("mode")
     public String mode(
-            Model model, @RequestParam Map<String, Object> map) {
+        Model model, 
+        @RequestParam Map<String, Object> map
+    ) {
         model.addAttribute("name", map.get("name"));
         model.addAttribute("auth", map.get("auth"));
         model.addAttribute("category", map.get("category"));
         return "mode";
+    }
+
+    @GetMapping("pagination")
+    public String pagination(
+        Model model, 
+        @RequestParam(defaultValue = "1") int page
+    ) {
+        int startPage = (page - 1) / 10 * 10 + 1;
+        int endPage = startPage + 9;
+
+        // 시작 페이지, 끝 페이지, 현재 페이지 
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("page", page);
+
+        return "pagination";
     }
 }

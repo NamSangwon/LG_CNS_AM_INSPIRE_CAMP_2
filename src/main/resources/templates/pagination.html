@@ -1,0 +1,10 @@
+<!-- 10 단위로 끊어서 현재 페이지를 포함하는 페이지들을 보암 -->
+<!-- ex. 현재 페이지 = 13 → 페이지 리스트 = 11 ~ 20 -->
+<!-- 현재 페이지는 링크 이동 기능 X -->
+<!-- (링크 이동 = a 태그 + th:href) -->
+<th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+    <span th:if="${page} == ${pageNumber}" th:text="${pageNumber}" style="font-weight:bold"></span>
+    <span th:unless="${page} == ${pageNumber}">
+        <a th:href="@{/pagination(page=${pageNumber})}"th:text="${pageNumber}"></a>
+    </span>
+</th:block>
