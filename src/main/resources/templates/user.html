@@ -1,0 +1,13 @@
+<!-- Variable Expression : ${ ... } -->
+<!-- 각각의 출력 방법 -->
+아이디:<span>[[${user.userId}]]</span><br>
+이름:<span>[[${user.userName}]]님</span><br>
+나이:<span>[[${user.userAge}]]세</span><br>
+<hr>
+아이디:<span th:text="${user.userId}"></span><br>
+이름:<span th:text="${user.userName} + 님"></span><br>
+나이:<span th:text="${user.userAge}+ 세"></span><br>
+<hr>
+아이디:<span data-th-text="${user.userId}"></span><br>
+이름:<span data-th-text="@{|${user.userName}님|}"></span><br>
+나이:<span data-th-text="@{|${user.userAge}세|}"></span><br>
