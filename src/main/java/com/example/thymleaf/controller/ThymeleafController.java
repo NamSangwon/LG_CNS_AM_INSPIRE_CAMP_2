@@ -23,4 +23,36 @@ public class ThymeleafController {
         // main.resources/template/*.html 파일에 매핑
         return "user";
     }
+
+    @GetMapping("userList")
+    public String userList(Model model) {
+        // User List 생성
+        List<Map<String, Object>> userList = new ArrayList<>();
+        
+        // User 1 생성
+        Map<String, Object> user = new HashMap<>();
+        user.put("userId", "a");
+        user.put("userName", "apple");
+        user.put("userAge", 21);
+        userList.add(user);
+
+        // User 2 생성
+        user = new HashMap<>();
+        user.put("userId", "b");
+        user.put("userName", "banana");
+        user.put("userAge", 22);
+        userList.add(user);
+
+        // User 3 생성
+        user = new HashMap<>();
+        user.put("userId", "c");
+        user.put("userName", "carrot");
+        user.put("userAge", 23);
+        userList.add(user);
+
+        // Model에 데이터 추가
+        model.addAttribute("userList", userList);
+        
+        return "user_list";
+    }
 }

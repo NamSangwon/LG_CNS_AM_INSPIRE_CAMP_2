@@ -1,0 +1,20 @@
+<body>
+    <table border="1">
+        <tr>
+            <td>아이디</td>
+            <td>이름</td>
+            <td>나이</td>
+        </tr>
+        <!-- for each를 통해 Model로 전송받은 UserList 내의 User 데이터 출력 -->
+        <tr th:each="user : ${userList}">
+            <td th:text="${user.userId}"></td>
+            <td th:text="${user.userName}"></td>
+            <td th:text="${user.userAge}"></td>
+        </tr>
+    </table>
+    <hr>
+    <!-- (1 ~ 10)까지의 for each 문 실행 -->
+    <th:block th:each="pageNumber : ${#numbers.sequence(1, 10)}">
+        <span th:text="${pageNumber}"></span>
+    </th:block>
+</body>
