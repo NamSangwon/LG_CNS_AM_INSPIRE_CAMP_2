@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- Table -->
+     <table border="1">
+        <thead>
+            <td>아이디</td>
+            <td>시도</td>
+            <td>구군</td>
+            <td>기관명</td>
+            <td>담당자</td>
+            <td>연락처</td>
+            <td>주소</td>
+        </thead>
+        <tbody>
+            <tr th:each="parking : ${parkings}">
+                <td th:text="${parking.id}"></td>
+                <td th:text="${parking.sido}"></td>
+                <td th:text="${parking.gu}"></td>
+                <td th:text="${parking.institution}"></td>
+                <td th:text="${parking.manager}"></td>
+                <td th:text="${parking.tel}"></td>
+                <td th:text="${parking.address}"></td>
+            </tr>
+        </tbody>
+     </table>
+
+    <!-- Page -->
+    <th:block th:if="${page} != ${prevPage}">
+        <a th:href="@{/holiday-parking(page=${prevPage})}" th:text="이전"></a>
+    </th:block>
+    <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+        <!-- Prev/Next Page -->
+        <span th:if="${page} == ${pageNumber}" th:text="${pageNumber}" style="font-weight:bold"></span>
+        <!-- Curr Page -->
+        <span th:unless="${page} == ${pageNumber}">
+            <a th:href="@{/holiday-parking(page=${pageNumber})}" th:text="${pageNumber}"></a>
+        </span>
+    </th:block>
+    <th:block th:if="${page} != ${nextPage}">
+        <a th:href="@{/holiday-parking(page=${nextPage})}" th:text="다음"></a>
+    </th:block>
+</body>
+
+</html>
