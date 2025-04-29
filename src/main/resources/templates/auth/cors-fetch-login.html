@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CORS Fetch Login</title>
+</head>
+
+<body>
+    <h1>CORS Fetch Login</h1>
+    <!-- [CrossOrigin의 위험성] -->
+    <!-- 
+        CSRF 공격과 마찬가지인 통신
+
+        [예시]
+            1. 웹사이트 로그인 중
+            2. 다른 사이트에서 버튼 클릭 (버튼은 웹사이트의 api를 호출하는 버튼)
+            3. 세션 및 쿠키가 유지되기 때문에, 호출이 성공적으로 수행됨
+    -->
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+
+            /*
+                서버가 다르면(==CrossOrigin) 쿠키 송수신 불가
+                    -> 서버에서 @CrossOrigin의 (origins & allowCredential)의 옵션을 허용하도록 설정
+                        & fetch()에 credential="include"를 추가하면 해결 가능
+            */
+            fetch('http://localhost:8080/auth/cors/fetch/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `username=${username}&password=${password}`,
+                credentials: "include"
+            })                
+                // [POST] localhost:8080/auth/fetch/login의 결과를 받아 옴
+                .then(response => response.text()) 
+                // SpringBoot에서 받아 온 결과 값이 success인 경우, main 페이지로 이동
+                .then(data => {
+                    if (data === 'success') {
+                        window.location.href = 'http://localhost:8080/auth/main';
+                    } else {
+                        alert('Login Failed');
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

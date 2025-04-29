@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CORS Form Login with CSRF</title>
+</head>
+
+<body>
+    <h1>CORS HTML Form Login</h1>
+    <!-- [CrossOrigin의 위험성] -->
+    <!-- 
+        CSRF 공격과 마찬가지인 통신
+
+        [예시]
+            1. 웹사이트 로그인 중
+            2. 다른 사이트에서 버튼 클릭 (버튼은 웹사이트의 api를 호출하는 버튼)
+            3. 세션 및 쿠키가 유지되기 때문에, 호출이 성공적으로 수행됨
+    -->
+    <form id="loginForm" method="post" action="http://localhost:8080/auth/cors/html/login">
+        <input type="text" name="username" placeholder="Username" />
+        <input type="password" name="password" placeholder="Password" />
+        <button type="submit">Login</button>
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fetch Login</title>
+</head>
+
+<body>
+    <h1>Fetch Login</h1>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/auth/fetch/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `username=${username}&password=${password}`
+            })
+                // [POST] localhost:8080/auth/fetch/login의 결과를 받아 옴
+                .then(response => response.text()) 
+                // SpringBoot에서 받아 온 결과 값이 success인 경우, main 페이지로 이동
+                .then(data => {
+                    if (data === 'success') {
+                        window.location.href = '/auth/main';
+                    } else {
+                        alert('Login Failed');
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>
