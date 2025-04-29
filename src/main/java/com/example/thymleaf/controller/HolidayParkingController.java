@@ -24,24 +24,27 @@ public class HolidayParkingController {
     @GetMapping("holiday-parking")
     public String getHolidayParking(
         Model model,
-        @RequestParam(defaultValue = "1") Integer page
+        @RequestParam(defaultValue = "1") Integer page,
+        @RequestParam(defaultValue = "") String search
     ) {
 
         Pageable pageable = PageRequest.of(page - 1, 10);
         
-        Page<HolidayParking> list = holidayParkingRepository.findAll(pageable);
-        List<HolidayParkingDto> holidayParkingDtoList = list.stream().map(HolidayParking::toDto).toList();
+        Page<HolidayParking> pages = 
+            holidayParkingRepository.findByInstitutionContainingOrSidoContainingOrGuContaining(pageable, search, search, search);
+        List<HolidayParkingDto> holidayParkingDtoList = pages.stream().map(HolidayParking::toDto).toList();
 
-        int prevPage = (page > 1) ? (page - 1) : (page);
-        int nextPage = (holidayParkingDtoList.size() < 10) ? (page) : (page + 1);
-
+        int maxPage = pages.getTotalPages();
         int startPage = (page - 1) / 10 * 10 + 1;
-        int endPage = startPage + 9;
+        int endPage = (startPage + 9 > maxPage) ? (maxPage) : (startPage + 9);
 
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-        model.addAttribute("prevPage", prevPage);
-        model.addAttribute("nextPage", nextPage);
+
+        // 전체 원소 & 전체 페이지 계산 메소드
+        model.addAttribute("totalElement", pages.getTotalElements());
+        model.addAttribute("totalPage", pages.getTotalPages());
+
         model.addAttribute("page", page);
         model.addAttribute("parkings", holidayParkingDtoList);
 
