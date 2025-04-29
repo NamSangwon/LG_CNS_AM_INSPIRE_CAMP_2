@@ -4,12 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Document</title>
 </head>
 
 <body>
     <!-- Table -->
-     <table border="1">
+     <table class="table table-striped">
         <thead>
             <td>아이디</td>
             <td>시도</td>
@@ -33,20 +36,15 @@
      </table>
 
     <!-- Page -->
-    <th:block th:if="${page} != ${prevPage}">
-        <a th:href="@{/holiday-parking(page=${prevPage})}" th:text="이전"></a>
-    </th:block>
-    <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
-        <!-- Prev/Next Page -->
-        <span th:if="${page} == ${pageNumber}" th:text="${pageNumber}" style="font-weight:bold"></span>
-        <!-- Curr Page -->
-        <span th:unless="${page} == ${pageNumber}">
-            <a th:href="@{/holiday-parking(page=${pageNumber})}" th:text="${pageNumber}"></a>
-        </span>
-    </th:block>
-    <th:block th:if="${page} != ${nextPage}">
-        <a th:href="@{/holiday-parking(page=${nextPage})}" th:text="다음"></a>
-    </th:block>
+     <ul class="pagination">
+        <li 
+            th:class = "@{|page-item ${page == pageNumber ? 'active' : ''}}"
+            th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+            <a class="page-link"
+                th:href = "@{|holiday-parking?page=${pageNumber}|}"
+                th:text = "${pageNumber}"></a>
+        </li>
+     </ul>
 </body>
 
 </html>
