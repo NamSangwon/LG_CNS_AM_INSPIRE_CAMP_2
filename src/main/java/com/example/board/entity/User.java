@@ -19,4 +19,7 @@ public class User {
 	private String email;
 	private String pwd;
 	private String name;
+	
+	@OneToMany(mappedBy = "user")
+	private List<BoardLike> likes = new ArrayList<>();
 }

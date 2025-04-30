@@ -29,9 +29,12 @@ public class Board {
 
 	@ManyToOne
 	private User user;
+	
+	@OneToMany(mappedBy = "board")
+	private List<BoardLike> likes = new ArrayList<>();
 
 
-
+	
 	public BoardListDto toBoardListDto() {
 		return new BoardListDto(id, title, user.getName());
 	}
