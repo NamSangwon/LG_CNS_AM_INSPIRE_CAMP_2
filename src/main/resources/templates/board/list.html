@@ -31,8 +31,8 @@
           <tr th:each="board : ${list}" th:attr="id=${board.id}" class="board-list">
             <td th:text="${board.id}"></td>
             <td th:text="${board.title}"></td>
-            <td th:text="${board.userId}"></td>
-            <td th:text="${board.id}"></td>
+            <td th:text="${board.userName}"></td>
+            <td th:text="${board.likeCount}"></td>
           </tr>
         </tbody>
       </table>

@@ -1,6 +1,5 @@
 package com.example.board.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +141,7 @@ public class BoardController {
 			if (opt.isPresent()) {
 				Board board = opt.get();
 
-				BoardViewDto boardViewDto = board.toBoardViewDto();
+				BoardViewDto boardViewDto = boardRepository.findBoardViewDto(board.getId());
 
 				model.addAttribute("board", boardViewDto);
 					
@@ -177,9 +176,9 @@ public class BoardController {
 		int pageCount = 10;
 
 		Pageable pageable = PageRequest.of(page - 1, pageCount);
-		Page<Board> pages = boardRepository.findByTitleContainingOrContentContaining(search, search, pageable);
+		Page<BoardListDto> pages = boardRepository.findBoardListWithLikeCount(search, pageable);
 
-		List<BoardListDto> list = pages.stream().map(Board::toBoardListDto).toList();
+		// List<BoardListDto> list = pages.stream().map(Board::toBoardListDto).toList();
 
 		int totalPages = pages.getTotalPages();
 		int startPage = (page - 1) / pageCount * pageCount + 1;
@@ -192,7 +191,7 @@ public class BoardController {
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
 
-		model.addAttribute("list", list);
+		model.addAttribute("list", pages.getContent());
 
 		return "board/list";
 	}

@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class BoardListDto {
     Long id;
     String title;
-    String userId;
+    String userName;
+    Long likeCount;
 }

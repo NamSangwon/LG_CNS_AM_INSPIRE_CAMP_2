@@ -20,17 +20,17 @@ public class BoardLikeId implements Serializable {
     // equals & hashCode 구현 필수
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BoardLikeId)) return false;
+        if (this == o) 
+            return true;
+        if (!(o instanceof BoardLikeId)) 
+            return false;
+
         BoardLikeId that = (BoardLikeId) o;
-        return Objects.equals(boardId, that.boardId) &&
-               Objects.equals(userId, that.userId);
+        return Objects.equals(boardId, that.boardId) && Objects.equals(userId, that.userId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(boardId, userId);
     }
-
-    // Getter/Setter 생략 가능
 }

@@ -11,5 +11,6 @@ public class BoardViewDto {
     Long id;
     String title;
     String content;
-    String userId;
+    String userName;
+    Long likeCount;
 }

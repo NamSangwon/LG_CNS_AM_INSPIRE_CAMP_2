@@ -19,7 +19,7 @@
     <div class="card-body">
       <span class="badge bg-primary rounded-pill" th:text="${board.id} + '번'"></span>
       <h5 class="card-title" th:text="${board.title}"></h5>
-      <h6 class="card-subtitle mb-2 text-muted" th:text="${board.userId}"></h6>
+      <h6 class="card-subtitle mb-2 text-muted" th:text="${board.userName}"></h6>
       <p class="card-text" th:text="${board.content}"></p>
     </div>
   </div>
@@ -43,7 +43,7 @@
 <!-- 추천 -->
 <div style="display: flex; justify-content: center;">
   <button type="button" class="btn btn-primary" 
-          th:text="'추천 ' + ${board.id}"></button>
+          th:text="'추천 ' + ${board.likeCount}"></button>
 </div>
 
 <!-- 댓글 -->
