@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.board.dto.BoardListDto;
 import com.example.board.dto.BoardViewDto;
 import com.example.board.entity.Board;
+import com.example.board.entity.BoardLike;
+import com.example.board.entity.BoardLikeId;
 import com.example.board.entity.User;
+import com.example.board.repository.BoardLikeRepository;
 import com.example.board.repository.BoardRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +29,9 @@ import jakarta.servlet.http.HttpSession;
 public class BoardController {
 	@Autowired
 	BoardRepository boardRepository;
+
+	@Autowired
+	BoardLikeRepository boardLikeRepository;
 	
 	@GetMapping("/board/delete/{boardId}")
 	public String boardDelete(
@@ -142,14 +148,26 @@ public class BoardController {
 				Board board = opt.get();
 
 				BoardViewDto boardViewDto = boardRepository.findBoardViewDto(board.getId());
-
 				model.addAttribute("board", boardViewDto);
+				
+				boolean bLikeClicked = false;
+				if (obj != null) {
+					if (obj.equals(board.getUser())) {
+						model.addAttribute("owner", true);
+					}
+
+					// 추천 클릭 유무 확인
+					User user = (User) obj;
 					
-				if (obj != null && obj.equals(board.getUser())) {
-					model.addAttribute("owner", true);
+					Optional<BoardLike> optBoardLike = boardLikeRepository.findById(new BoardLikeId(boardId, user.getId()));
+					if (optBoardLike.isPresent()) {
+						bLikeClicked = true;
+					}
 				}
+
+				// 추천 클릭 유무 확인 후 페이지에 반영
+				model.addAttribute("bLikeClicked", bLikeClicked);
 			}
-			
 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -159,6 +177,58 @@ public class BoardController {
 		}
 
 		return "board/view";
+	}
+
+	// 추천 버튼 클릭 시, 페이지 업데이트 (BoardLike 테이블 업데이트)
+	@GetMapping("/board/like/{boardId}")
+	public String updateLike(
+		@PathVariable Long boardId, 
+		HttpSession session,
+		Model model
+	) {
+		try {
+			Object obj = session.getAttribute("user_info");
+
+			if (obj == null) 
+				throw new Exception();
+
+			if (boardId == null)
+				throw new Exception();
+
+			Optional<Board> optBoard = boardRepository.findById(boardId);
+			if (optBoard.isPresent()) {
+				Board board = optBoard.get();
+				User user = (User) obj;
+
+				BoardLikeId boardLikeId = new BoardLikeId(boardId, user.getId());
+
+				Optional<BoardLike> opt = boardLikeRepository.findById(boardLikeId);
+				// 게시판 추천 해제
+				if (opt.isPresent()) {
+					BoardLike boardLike = opt.get();
+					boardLikeRepository.delete(boardLike);
+					model.addAttribute("bLikeClicked", false);
+				}
+				// 게시판 추천
+				else {
+					BoardLike boardLike = new BoardLike(boardLikeId, board, user);
+					boardLikeRepository.save(boardLike);
+					model.addAttribute("bLikeClicked", true);
+				}				
+			}
+			else {
+				throw new Exception();
+			}
+
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+
+			return "redirect:/board";
+		}
+
+		return "redirect:/board/view/" + boardId;
 	}
 
 	@GetMapping("/board")

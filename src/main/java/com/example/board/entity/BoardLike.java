@@ -5,10 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity(name = "board_like")
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardLike {
     @EmbeddedId
     private BoardLikeId id;
