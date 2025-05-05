@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardViewDto {
+public class BoardCommentDto {
     Long id;
-    String title;
-    String content;
     String userName;
-    Long likeCount;
-    List<BoardCommentDto> comments;
+    String content;
+    List<BoardCommentDto> childComments;
 }

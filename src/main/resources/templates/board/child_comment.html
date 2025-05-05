@@ -1,0 +1,35 @@
+<!-- fragments/comment.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="commentFragment(comments, boardId)">
+        <!-- Child comments-->
+        <div th:each="comment : ${comments}">
+            <div class="d-flex mt-4">
+                <div class="flex-shrink-0">
+                    <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="...">
+                </div>
+                <div class="ms-3">
+
+                    <div id="userName" class="fw-bold" th:text="${comment.userName}"></div>
+
+                    <div id="content" th:text="${comment.content}"></div>
+                    
+                    <button data-bs-toggle="collapse" th:attr="data-bs-target='#reply_' + ${comment.id}">답글</button>
+
+                    <div class="collapse" th:id="'reply_' + ${comment.id}">
+                        <form class="mt-4" th:action="@{'/board/comment/' + ${board.id}}" method="get">
+                            <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!" name="comment"></textarea>
+                            <input type="hidden" name="parentCommentId" th:value="${comment.id}">
+                            <button type="submit">등록</button>
+                        </form>
+                    </div>
+
+                    <div th:replace="~{board/child_comment :: commentFragment(${comment.childComments}, ${board.id})}"></div>
+
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

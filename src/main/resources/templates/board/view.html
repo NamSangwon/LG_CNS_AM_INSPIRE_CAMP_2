@@ -1,94 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head th:replace="~{common/head}">
 
 </head>
+
 <body>
 
-<div th:replace="~{common/header}">
-   
-</div>
+  <div th:replace="~{common/header}">
 
-<nav th:replace="~{common/nav}">
+  </div>
 
-</nav>
+  <nav th:replace="~{common/nav}">
 
-<!-- 글 내용 -->
-<div class="container mt-5">
-  <div class="card">
-    <div class="card-body">
-      <span class="badge bg-primary rounded-pill" th:text="${board.id} + '번'"></span>
-      <h5 class="card-title" th:text="${board.title}"></h5>
-      <h6 class="card-subtitle mb-2 text-muted" th:text="${board.userName}"></h6>
-      <p class="card-text" th:text="${board.content}"></p>
+  </nav>
+
+  <!-- 글 내용 -->
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-body">
+        <span class="badge bg-primary rounded-pill" th:text="${board.id} + '번'"></span>
+        <h5 class="card-title" th:text="${board.title}"></h5>
+        <h6 class="card-subtitle mb-2 text-muted" th:text="${board.userName}"></h6>
+        <p class="card-text" th:text="${board.content}"></p>
+      </div>
     </div>
   </div>
-</div> 
 
-<!-- 목록 / 수정 / 삭제 -->
-<!-- 게시판의 작성자가 아닐 시, 수정/삭제 버튼 출력 하지 않음 -->
-<!-- 따라서, script 오류 방지를 위해 버튼과 같은 위치에 script 작성 -->
-<div class="container mt-5">
-  <ul class="nav justify-content-end">
-    <li class="nav-item">
-      <a class="nav-link" href="#" id="list">목록</a>
-      <script>
-        document.querySelector('#list').addEventListener('click', () => {
-          location = `/board`;
-        });
-      </script>
-    </li>
-    <li class="nav-item" th:if="${owner}" >
-      <a class="nav-link" href="#" id="update" th:num="${board.id}">수정</a>
-      <script>
-        document.querySelector('#update').addEventListener('click', (e)=>{
-          e.preventDefault();
-          if(confirm('수정하시겠습니까?')) {
-            const num = e.target.getAttribute('num');
-            location = `/board/update/${num}`;
-          }
-        });
-      </script>
-    </li>
-    <li class="nav-item" th:if="${owner}" >
-      <a class="nav-link" href="#" id="delete" th:num="${board.id}">삭제</a>
-      <script>
-        document.querySelector('#delete').addEventListener('click', (e) => {
-          e.preventDefault();
-          if(confirm('삭제하시겠습니까?')) {
-            const num = e.target.getAttribute('num');
-            location = `/board/delete/${num}`;
-          }
-        });
-      </script>
-    </li>
-  </ul>
-</div>
+  <!-- 목록 / 수정 / 삭제 -->
+  <!-- 게시판의 작성자가 아닐 시, 수정/삭제 버튼 출력 하지 않음 -->
+  <!-- 따라서, script 오류 방지를 위해 버튼과 같은 위치에 script 작성 -->
+  <div class="container mt-5">
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="list">목록</a>
+        <script>
+          document.querySelector('#list').addEventListener('click', () => {
+            location = `/board`;
+          });
+        </script>
+      </li>
+      <li class="nav-item" th:if="${owner}">
+        <a class="nav-link" href="#" id="update" th:num="${board.id}">수정</a>
+        <script>
+          document.querySelector('#update').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('수정하시겠습니까?')) {
+              const num = e.target.getAttribute('num');
+              location = `/board/update/${num}`;
+            }
+          });
+        </script>
+      </li>
+      <li class="nav-item" th:if="${owner}">
+        <a class="nav-link" href="#" id="delete" th:num="${board.id}">삭제</a>
+        <script>
+          document.querySelector('#delete').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('삭제하시겠습니까?')) {
+              const num = e.target.getAttribute('num');
+              location = `/board/delete/${num}`;
+            }
+          });
+        </script>
+      </li>
+    </ul>
+  </div>
 
-<!-- 추천 -->
-<div style="display: flex; justify-content: center;">
-  <!-- 사용자 추천 클릭 유무에 따라 출력을 달리 함 -->
-  <!-- 추천 클릭 시, BoardLike 테이블 업데이트 -->
-  <button type="button" th:class="'btn ' + (${bLikeClicked} ? 'btn-danger' : 'btn-primary')" id="like-btn" 
-          th:text="(${bLikeClicked} ? '추천 해제 ' : '추천 ') + ${board.likeCount}" th:num="${board.id}"></button>
+  <!-- 추천 -->
+  <div style="display: flex; justify-content: center;">
+    <!-- 사용자 추천 클릭 유무에 따라 출력을 달리 함 -->
+    <!-- 추천 클릭 시, BoardLike 테이블 업데이트 -->
+    <button type="button" th:class="'btn ' + (${bLikeClicked} ? 'btn-danger' : 'btn-primary')" id="like-btn"
+      th:text="(${bLikeClicked} ? '추천 해제 ' : '추천 ') + ${board.likeCount}" th:num="${board.id}"></button>
 
-  <script>
-    document.querySelector('#like-btn').addEventListener('click', (e)=>{
-      e.preventDefault();
-      alert('추천을 완료하였습니다.');
-      const num = e.target.getAttribute('num');
-      location = `/board/like/${num}`;
-    });
-  </script>
-</div>
+    <script>
+      document.querySelector('#like-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('추천을 완료하였습니다.');
+        const num = e.target.getAttribute('num');
+        location = `/board/like/${num}`;
+      });
+    </script>
+  </div>
 
-<!-- 댓글 -->
-<div>
+  <!-- 댓글 -->
+  <section class="mb-5" style="margin-top: 30px;">
+    <div class="card bg-light">
+      <div class="card-body">
 
-</div>
+        <!-- Comment form-->
+        <form class="mb-4" th:action="@{'/board/comment/' + ${board.id}}" method="get">
+          <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!" name="comment"></textarea>
+          <button type="submit">등록</button>
+        </form>
 
-<div th:replace="~{common/footer}">
-</div>
+        <!-- Comment-->
+        <div th:replace="~{board/child_comment :: commentFragment(${board.comments}, ${board.id})}"></div>
+
+      </div>
+    </div>
+  </section>
+
+  <div th:replace="~{common/footer}">
+  </div>
 
 </body>
+
 </html>

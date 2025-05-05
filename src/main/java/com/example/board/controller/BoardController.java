@@ -1,5 +1,6 @@
 package com.example.board.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.board.dto.BoardListDto;
 import com.example.board.dto.BoardViewDto;
 import com.example.board.entity.Board;
+import com.example.board.entity.BoardComment;
 import com.example.board.entity.BoardLike;
 import com.example.board.entity.BoardLikeId;
 import com.example.board.entity.User;
+import com.example.board.repository.BoardCommentRepository;
 import com.example.board.repository.BoardLikeRepository;
 import com.example.board.repository.BoardRepository;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -32,6 +36,9 @@ public class BoardController {
 
 	@Autowired
 	BoardLikeRepository boardLikeRepository;
+
+	@Autowired
+	BoardCommentRepository boardCommentRepository;
 	
 	@GetMapping("/board/delete/{boardId}")
 	public String boardDelete(
@@ -147,7 +154,8 @@ public class BoardController {
 			if (opt.isPresent()) {
 				Board board = opt.get();
 
-				BoardViewDto boardViewDto = boardRepository.findBoardViewDto(board.getId());
+				// JPA 사용 대신 [Entity 간의 매핑]과 [Query Method] 만으로 해결 가능
+				BoardViewDto boardViewDto = board.toBoardViewDto();
 				model.addAttribute("board", boardViewDto);
 				
 				boolean bLikeClicked = false;
@@ -178,6 +186,60 @@ public class BoardController {
 
 		return "board/view";
 	}
+
+	@GetMapping("/board/comment/{boardId}")
+	public String comment(
+		@PathVariable Long boardId,
+		@RequestParam(required = false) Long parentCommentId,
+		@RequestParam String comment,
+		HttpSession session
+	) {
+		try {
+			Object obj = session.getAttribute("user_info");
+	
+			if (obj == null)
+				throw new Exception();
+
+			if (boardId == null)
+				throw new Exception();
+
+			Optional<Board> opt = boardRepository.findById(boardId);
+			if (opt.isPresent())
+			{
+				Board board = opt.get();
+				
+				if (obj instanceof User) {
+					User user = (User) obj;
+	
+					BoardComment newComment = new BoardComment();
+					newComment.setBoard(board);
+					newComment.setUser(user);
+					newComment.setContent(comment);
+
+					if (parentCommentId != null) {
+						Optional<BoardComment> optParentComment = boardCommentRepository.findById(parentCommentId);
+						if (optParentComment.isPresent()) {
+							newComment.setParentComment(optParentComment.get());
+						}
+					}
+			
+					boardCommentRepository.save(newComment);
+				}
+				else {
+					throw new Exception();
+				}
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+
+			return "redirect:/board/list";
+		}
+
+		return "redirect:/board/view/" + boardId;
+	}
+	
 
 	// 추천 버튼 클릭 시, 페이지 업데이트 (BoardLike 테이블 업데이트)
 	@GetMapping("/board/like/{boardId}")
@@ -246,9 +308,11 @@ public class BoardController {
 		int pageCount = 10;
 
 		Pageable pageable = PageRequest.of(page - 1, pageCount);
-		Page<BoardListDto> pages = boardRepository.findBoardListWithLikeCount(search, pageable);
 
-		// List<BoardListDto> list = pages.stream().map(Board::toBoardListDto).toList();
+		// JPA 사용 대신 [Entity 간의 매핑]과 [Query Method] 만으로 해결 가능
+		Page<Board> pages = boardRepository.findByTitleContainingOrContentContaining(search, search, pageable);
+
+		List<BoardListDto> list = pages.stream().map(Board::toBoardListDto).toList();
 
 		int totalPages = pages.getTotalPages();
 		int startPage = (page - 1) / pageCount * pageCount + 1;
@@ -261,7 +325,7 @@ public class BoardController {
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
 
-		model.addAttribute("list", pages.getContent());
+		model.addAttribute("list", list);
 
 		return "board/list";
 	}
