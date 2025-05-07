@@ -349,20 +349,7 @@ public class BoardController {
 	}
 
 	@GetMapping("/board/write")
-	public String boardWrite(HttpSession session) {
-		try {
-			Object obj = session.getAttribute("user_info");
-
-			if (obj == null) 
-				throw new Exception();
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
-
-			return "redirect:/board";
-		}
-
+	public String boardWrite() {
 		return "board/write";
 	}
 	
