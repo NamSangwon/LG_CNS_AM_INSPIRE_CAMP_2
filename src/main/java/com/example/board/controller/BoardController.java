@@ -120,13 +120,23 @@ public class BoardController {
 			if (obj == null)
 				throw new Exception();
 
-			if (obj instanceof User) {
-				User user = (User) obj;
+			if (board.getTitle().isEmpty())
+				throw new Exception();
 
-				board.setId(boardId);
-				board.setUser(user);
+			if (board.getContent().isEmpty())
+				throw new Exception();
 
-				boardRepository.save(board);
+			// Board 데이터를 찾은 후 바꿀 값만 바꾸는 것이 더 안전한 방안
+			Optional<Board> opt = boardRepository.findById(boardId);
+			if (opt.isPresent()) {
+				Board optBoard = opt.get();
+
+				if (obj.equals(optBoard.getUser())) {
+					optBoard.setTitle(board.getTitle());
+					optBoard.setContent(board.getContent());
+
+					boardRepository.save(optBoard);
+				}
 			}
 
 		} catch (Exception e) {
