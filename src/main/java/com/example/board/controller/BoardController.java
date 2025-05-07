@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -317,7 +319,8 @@ public class BoardController {
 	) {
 		int pageCount = 10;
 
-		Pageable pageable = PageRequest.of(page - 1, pageCount);
+		Sort sort = Sort.by(Direction.DESC, "id");
+		Pageable pageable = PageRequest.of(page - 1, pageCount, sort);
 
 		// JPA 사용 대신 [Entity 간의 매핑]과 [Query Method] 만으로 해결 가능
 		Page<Board> pages = boardRepository.findByTitleContainingOrContentContaining(search, search, pageable);
