@@ -1,6 +1,7 @@
 package com.example.board.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,11 +28,10 @@ public class UserController {
 		@ModelAttribute User user,
 		HttpSession session
 	) {
-		List<User> list = userRepository.findByEmailAndPwd(user.getEmail(), user.getPwd());
-		boolean isFindOnlyOne = (list.size() == 1);
+		Optional<User> opt = userRepository.findByEmailAndPwd(user.getEmail(), user.getPwd());
 
-		if (isFindOnlyOne) {
-			session.setAttribute("user_info", list.get(0));
+		if (opt.isPresent()) {
+			session.setAttribute("user_info", opt.get());
 		}
 		else {
 			return "redirect:/signin";
@@ -54,8 +54,7 @@ public class UserController {
 
 	@PostMapping("/signup")
 	public String signupPost(
-		@ModelAttribute User user,
-		HttpSession session
+		@ModelAttribute User user
 	) {
 		List<User> list = userRepository.findByEmailOrName(user.getEmail(), user.getName());
 		boolean isEmpty = list.isEmpty();
