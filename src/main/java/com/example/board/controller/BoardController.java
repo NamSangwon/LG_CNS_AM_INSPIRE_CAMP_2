@@ -30,6 +30,7 @@ import com.example.board.repository.BoardRepository;
 
 import ch.qos.logback.core.encoder.EchoEncoder;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 
 @Controller
 public class BoardController {
@@ -57,9 +58,10 @@ public class BoardController {
 
 			Optional<Board> opt = boardRepository.findById(boardId);
 			if (opt.isPresent()) {
+				User user = (User) obj;
 				Board board = opt.get();
 
-				if (obj.equals(board.getUser())) {
+				if (user.getId() == board.getUser().getId()) {
 					boardRepository.delete(board);
 				}
 			}
@@ -91,9 +93,10 @@ public class BoardController {
 			Optional<Board> opt = boardRepository.findById(boardId);
 			if (opt.isPresent())
 			{
+				User user = (User) obj;
 				Board board = opt.get();
 
-				if (obj.equals(board.getUser())) {
+				if (user.getId() == board.getUser().getId()) {
 					model.addAttribute("board", board);
 				}
 				else {
@@ -131,9 +134,10 @@ public class BoardController {
 			// Board 데이터를 찾은 후 바꿀 값만 바꾸는 것이 더 안전한 방안
 			Optional<Board> opt = boardRepository.findById(boardId);
 			if (opt.isPresent()) {
+				User user = (User) obj;
 				Board optBoard = opt.get();
 
-				if (obj.equals(optBoard.getUser())) {
+				if (user.getId() == optBoard.getUser().getId()) {
 					optBoard.setTitle(board.getTitle());
 					optBoard.setContent(board.getContent());
 
@@ -172,12 +176,13 @@ public class BoardController {
 				
 				boolean bLikeClicked = false;
 				if (obj != null) {
-					if (obj.equals(board.getUser())) {
-						model.addAttribute("bIsOwner", true);
-					}
 
 					// 추천 클릭 유무 확인
 					User user = (User) obj;
+
+					if (user.getId() == board.getUser().getId()) {
+						model.addAttribute("bIsOwner", true);
+					}
 					
 					Optional<BoardLike> optBoardLike = boardLikeRepository.findById(new BoardLikeId(boardId, user.getId()));
 					if (optBoardLike.isPresent()) {
