@@ -21,6 +21,7 @@ public class User {
 	private String pwd;
 	private String name;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<BoardLike> likes = new ArrayList<>();
+	// // User가 추천한 리스트 조회 가능. But, 지금은 불필요하기 때문에 사용 X (Lazy Initialize 오류 발생)
+	// @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	// private List<BoardLike> likes = new ArrayList<>();
 }

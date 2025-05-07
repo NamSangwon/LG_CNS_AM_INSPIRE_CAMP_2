@@ -40,7 +40,7 @@
           });
         </script>
       </li>
-      <li class="nav-item" th:if="${owner}">
+      <li class="nav-item" th:if="${bIsOwner}">
         <a class="nav-link" href="#" id="update" th:num="${board.id}">수정</a>
         <script>
           document.querySelector('#update').addEventListener('click', (e) => {
@@ -52,7 +52,7 @@
           });
         </script>
       </li>
-      <li class="nav-item" th:if="${owner}">
+      <li class="nav-item" th:if="${bIsOwner}">
         <a class="nav-link" href="#" id="delete" th:num="${board.id}">삭제</a>
         <script>
           document.querySelector('#delete').addEventListener('click', (e) => {

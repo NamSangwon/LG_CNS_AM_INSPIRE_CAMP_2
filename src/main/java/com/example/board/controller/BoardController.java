@@ -171,7 +171,7 @@ public class BoardController {
 				boolean bLikeClicked = false;
 				if (obj != null) {
 					if (obj.equals(board.getUser())) {
-						model.addAttribute("owner", true);
+						model.addAttribute("bIsOwner", true);
 					}
 
 					// 추천 클릭 유무 확인
