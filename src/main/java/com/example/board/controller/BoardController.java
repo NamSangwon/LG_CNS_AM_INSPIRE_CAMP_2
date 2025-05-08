@@ -1,7 +1,9 @@
 package com.example.board.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.board.dto.BoardListDto;
 import com.example.board.dto.BoardViewDto;
@@ -23,10 +26,12 @@ import com.example.board.entity.Board;
 import com.example.board.entity.BoardComment;
 import com.example.board.entity.BoardLike;
 import com.example.board.entity.BoardLikeId;
+import com.example.board.entity.FileAttach;
 import com.example.board.entity.User;
 import com.example.board.repository.BoardCommentRepository;
 import com.example.board.repository.BoardLikeRepository;
 import com.example.board.repository.BoardRepository;
+import com.example.board.repository.FileAttachRepository;
 
 import ch.qos.logback.core.encoder.EchoEncoder;
 import jakarta.servlet.http.HttpSession;
@@ -42,6 +47,9 @@ public class BoardController {
 
 	@Autowired
 	BoardCommentRepository boardCommentRepository;
+
+	@Autowired
+	FileAttachRepository fileAttachRepository;
 	
 	@GetMapping("/board/delete/{boardId}")
 	public String boardDelete(
@@ -356,6 +364,7 @@ public class BoardController {
 	@PostMapping("/board/write")
 	public String boardWritePost(
 		@ModelAttribute Board board,
+		@RequestParam List<MultipartFile> files,
 		HttpSession session
 	) {
 		try {
@@ -370,7 +379,35 @@ public class BoardController {
 				board.setUser(user);
 
 				// user의 PK인 id가 존재하지 않으면, 오류 발생
-				boardRepository.save(board);
+				Board savedBoard = boardRepository.save(board);
+
+				// 파일 저장 폴더
+				File dir = new File("c:/upload");
+				if (!dir.isDirectory()) {
+					dir.mkdir();
+				}
+
+				for (MultipartFile file : files) {
+					UUID uuid = UUID.randomUUID();
+
+					String oName = file.getOriginalFilename();
+					String ext = oName.substring(oName.lastIndexOf("."));
+
+					String cName = uuid + ext;
+
+					// 파일 저장
+					File f = new File(dir.getAbsolutePath() + "/" + cName);
+					file.transferTo(f);
+
+					// FileAttach Entity 생성
+					FileAttach fileAttach = new FileAttach();
+					fileAttach.setBoard(savedBoard);
+					fileAttach.setOriginalName(oName);
+					fileAttach.setChangedName(cName);
+				
+					// DB에 저장
+					fileAttachRepository.save(fileAttach);
+				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

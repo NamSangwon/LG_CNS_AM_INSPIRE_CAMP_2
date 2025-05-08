@@ -1,5 +1,6 @@
 package com.example.board.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +12,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+// 개발 시, Serializable을 implements하도록 하여, 서버 재구동 시, 재로그인 방지
 @Entity
 @Data
-public class User {
+public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
