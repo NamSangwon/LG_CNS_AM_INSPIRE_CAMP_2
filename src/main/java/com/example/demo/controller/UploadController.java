@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,8 @@ import com.example.demo.model.FileInfo;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -88,6 +92,41 @@ public class UploadController {
        file.transferTo(f);
 
        return result;
+    }
+    
+    @GetMapping("/multiple-upload")
+    public String getMultipleUpload() {
+        return "multiple_upload";
+    }
+
+    @PostMapping("/multiple-upload")
+    @ResponseBody
+    public String postMethodName(MultipartHttpServletRequest mRequest) throws IllegalStateException, IOException {
+        String result = "";
+
+        Iterator<String> fileNames = mRequest.getFileNames();
+
+        File dir = new File("c:/upload");
+        if (!dir.isDirectory()) {
+            dir.mkdir();
+        }
+
+        while(fileNames.hasNext()) {
+            String fileName = fileNames.next();
+
+            List<MultipartFile> files = mRequest.getFiles(fileName);
+            for (MultipartFile file : files) {
+                String oName = file.getOriginalFilename();
+                Long size = file.getSize();
+                result += oName + " : " + size + "<br>";
+
+                // 파일 저장
+                File f = new File("c:/upload/" + oName);
+                file.transferTo(f);
+            }
+        }
+
+        return result;
     }
     
 }
