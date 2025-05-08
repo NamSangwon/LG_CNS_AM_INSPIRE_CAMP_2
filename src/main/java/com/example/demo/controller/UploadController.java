@@ -1,5 +1,9 @@
 package com.example.demo.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -58,12 +62,30 @@ public class UploadController {
 
     @PostMapping("/upload3")
     @ResponseBody
-    public String postUpload3(@ModelAttribute FileInfo info) {
+    public String postUpload3(@ModelAttribute FileInfo info) throws IllegalStateException, IOException {
        String result = "";
 
        String oName = info.getFile().getOriginalFilename();
        
        result += oName + "<br>" + info.getFile().getSize();
+
+       MultipartFile file = info.getFile();
+
+       // 저장시킬 폴더 존재 여부 확인
+       File dir = new File("c:/upload");
+       if (!dir.isDirectory()) {
+            dir.mkdir();
+       }
+
+       // 파일명 중복 피하기
+       UUID uuid = UUID.randomUUID();
+
+       int ext_idx = oName.lastIndexOf(".");
+       String ext = oName.substring(ext_idx); // .zip, .jpg, ...
+
+       // 업로드된 파일 저장 (원본 파일명은 DB에 저장)
+       File f = new File("c:/upload/" + uuid + ext);
+       file.transferTo(f);
 
        return result;
     }
