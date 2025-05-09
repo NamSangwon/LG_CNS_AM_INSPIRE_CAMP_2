@@ -1,6 +1,7 @@
 package com.example.board.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,9 +35,7 @@ import com.example.board.repository.BoardLikeRepository;
 import com.example.board.repository.BoardRepository;
 import com.example.board.repository.FileAttachRepository;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
 
 @Controller
 public class BoardController {
@@ -360,7 +360,15 @@ public class BoardController {
 	public String boardWrite() {
 		return "board/write";
 	}
-	
+
+	/*
+	 * 	 1. BoardRepository의 save
+	 * 	 2. fileAttachRepository의 save
+	 *	 총 2번의 DB 접근이 발생함 => 하나라도 실패하면 모두 실패 처리 => Transaction 사용
+	 * 	 (Runtime 예외가 발생되면 DB 롤백)
+	 * 	 (rollbackFor 옵션을 통해 Runtime Exception 외의 다른 Exception도 처리하도록 지정)
+	 */
+	@Transactional(rollbackFor = IOException.class)
 	@PostMapping("/board/write")
 	public String boardWritePost(
 		@ModelAttribute Board board,

@@ -13,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 // 개발 시, Serializable을 implements하도록 하여, 서버 재구동 시, 재로그인 방지
+// DevTools를 통한 편의성 제공
 @Entity
 @Data
 public class User implements Serializable {
