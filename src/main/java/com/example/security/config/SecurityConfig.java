@@ -27,7 +27,11 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/hello", true)
                         .permitAll())
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/hello"));
+                    .logoutUrl("/logout") // default: /logout (POST)
+                    .logoutSuccessUrl("/login?logout=true")
+                    .invalidateHttpSession(true) // 세션 제거
+                    .deleteCookies("JSESSIONID") // 쿠키 제거
+                );
 
         return http.build();
     }
