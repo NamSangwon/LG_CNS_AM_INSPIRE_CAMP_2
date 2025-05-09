@@ -20,6 +20,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/admin").authenticated()
+                .requestMatchers("/my-page").authenticated()
                 .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/login") // 커스터마이징한 로그인 페이지 지정
