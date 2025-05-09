@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     /*
-     * /admin으로의 요청 시, 로그인 수행
+     * /admin 으로의 요청 시, 로그인 수행
      * 로그인 성공하면, /hello로 이동
      * (아래의 코드에서 UserDetailsService 인터페이스를 구현한 
      * MemberDetailsService의 loadUserByUsername() 메소드를 사용하여 User 객체 정보 가져 옴)
@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin").authenticated()
                 .anyRequest().permitAll())
                 .formLogin(form -> form
-                        // .loginPage("/login") // 아직 없지만 나중에 만들 예정
+                        .loginPage("/login") // 커스터마이징한 로그인 페이지 지정
                         .defaultSuccessUrl("/hello", true)
                         .permitAll())
                 .logout(logout -> logout
