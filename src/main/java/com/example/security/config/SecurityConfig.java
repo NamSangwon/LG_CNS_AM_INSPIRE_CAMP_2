@@ -19,15 +19,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/admin").authenticated()
-                .requestMatchers("/my-page").authenticated()
-                .requestMatchers("/admin-page").hasRole("ADMIN")
-                .requestMatchers("/user-page").hasRole("USER")
-                .anyRequest().permitAll())
+                // 요청 권한 처리
+                    // authenticated() == 로그인 여부 확인
+                    .requestMatchers("/admin").authenticated()
+                    .requestMatchers("/my-page").authenticated()
+                    // hasRole() == 역할 여부 확인
+                    .requestMatchers("/admin-page").hasRole("ADMIN")
+                    .requestMatchers("/user-page").hasRole("USER")
+                    // 위의 요청을 제외한 나머지는 모두 허용
+                    .anyRequest().permitAll()
+                )
+                // 로그인 처리
                 .formLogin(form -> form
-                        .loginPage("/login") // 커스터마이징한 로그인 페이지 지정
-                        .defaultSuccessUrl("/hello", true)
-                        .permitAll())
+                    .loginPage("/login") // 커스터마이징한 로그인 페이지 지정
+                    .defaultSuccessUrl("/hello", true)
+                    .permitAll()
+                )
+                // 로그아웃 처리
                 .logout(logout -> logout
                     .logoutUrl("/logout") // default: /logout (POST)
                     .logoutSuccessUrl("/login?logout=true")
