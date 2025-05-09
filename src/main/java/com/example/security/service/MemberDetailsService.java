@@ -26,7 +26,7 @@ public class MemberDetailsService implements UserDetailsService{
         return new User(
             member.getUsername(),
             member.getPassword(),
-            List.of(new SimpleGrantedAuthority("ROLE_USER"))
+            List.of(new SimpleGrantedAuthority(member.getRole()))
         );
     }
 

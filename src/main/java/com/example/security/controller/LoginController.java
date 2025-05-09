@@ -18,4 +18,14 @@ public class LoginController {
         return "my-page";
     }
     
+    @GetMapping("/user-page")
+    public String getUserPage() {
+        return "my-page";
+    }
+    
+    @GetMapping("/admin-page")
+    public String getAdminPage() {
+        return "my-page";
+    }
+    
 }

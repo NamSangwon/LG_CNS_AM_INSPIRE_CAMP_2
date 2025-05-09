@@ -11,4 +11,6 @@ public class Member {
     String username;
 
     String password;
+
+    String role;
 }

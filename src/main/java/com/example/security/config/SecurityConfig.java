@@ -21,6 +21,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/admin").authenticated()
                 .requestMatchers("/my-page").authenticated()
+                .requestMatchers("/admin-page").hasRole("ADMIN")
+                .requestMatchers("/user-page").hasRole("USER")
                 .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/login") // 커스터마이징한 로그인 페이지 지정
