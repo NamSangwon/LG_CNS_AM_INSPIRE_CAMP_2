@@ -248,10 +248,18 @@
         }
       ```
 ---
+### AOP vs 서블릿 Filter vs 스프링 Filter vs Interceptor
+| 구분                | AOP                           | Servlet Filter             | Spring Filter              | HandlerInterceptor                          |
+|:-----------------:|:-----------------------------:|:--------------------------:|:--------------------------:|:-------------------------------------------:|
+| 적용 대상           | 메서드 실행 전후 (Spring Bean) | 전체 HTTP 요청/응답       | 전체 HTTP 요청/응답       | 컨트롤러 진입 전후 (전체 HTTP 요청/응답)   |
+| 실행 시점           | DispatcherServlet 이후, Bean 내부 | DispatcherServlet 이전     | DispatcherServlet 이전     | DispatcherServlet 이후, Controller 직전     |
+| 주요 용도           | 트랜잭션, 로깅, 보안, 공통 비즈니스 로직 | 인코딩, 로그인 체크, 로깅 등 전처리 | 인증/인가 필터, CORS, JWT 필터 등 | 로그인 여부 확인, 권한 체크, 로깅 등        |
 
+---
 ### 4. File Upload/Download
-  + ㅁㄴㅇ
-  + ㅁ
+  + `Upload`
+    
+  + `Download`
 ---
 
 ### 5. UUID
