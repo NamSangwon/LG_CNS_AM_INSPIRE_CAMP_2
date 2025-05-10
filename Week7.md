@@ -127,10 +127,11 @@
     + IP 검사 등
       
   + 사용 예시
-    + `Filter` : 요청한 클라이언트의 IP 확인
+    + `Filter` 구성 : 요청한 클라이언트의 IP 확인
       ```java
         @Slf4j
-        public class IPCheckFilter implements Filter{
+        // Filter 인터페이스를 implemets하여 필터 구성
+        public class IPCheckFilter implements Filter {
           @Override
           public void doFilter(
             ServletRequest request,
@@ -170,8 +171,82 @@
 ---
 
 ### 3. Interceptor
-  + ㅁㄴㅇ
-  + ㅁ
+  + **Controller에 들어오는 요청과 응답을 가로채는 기능**
+  + 특징
+    + Filter와 유사하지만 동작하는 시기가 다름 (DispatcherServlet으로 진입한 후 동작)
+    + **request와 response 객체를 기본 제공하므로 AOP에 비해 웹과 관련된 기능을 쉽게 작성**
+    + **Filter와 달리 *적용할 URL*과 *제외할 URL*을 따로 지정할 수 있음**
+  + 주요 메소드
+    + preHandler() : Controller의 메소드가 실행되기 전 (요청)
+    + postHandler() : Controller의 메소드가 실행된 후 (응답)
+    + afterCompletion() : View가 렌더링된 후
+  + 사용 예시
+    + `Interceptor` 구성 : 로그인 확인
+      ```java
+        @Component // Bean으로 등록
+        @Slf4j
+        // HandlerInterceptor 인터페이스를 implements하여 인터셉터 구성
+        public class SignInCheckInterceptor implements HandlerInterceptor {
+          // 컨트롤러 메소드 실행 전 (요청 시)
+          // 세션을 통해 로그인 여부 확인 -> 비로그인 시, 로그인 페이지로 이동
+          @Override
+          public boolean preHandle(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Object handler
+          ) throwsException {
+            log.debug("preHandle");
+            HttpSession session= request.getSession();
+            User user= (User) session.getAttribute("user");
+            if(user == null) {
+              response.sendRedirect("/login");
+              return false;
+            }
+            return true;
+          }
+          // Controller의 메소드가 실행된 후 (응답 시)
+          // 로그 출력
+          @Override
+          public void postHandle(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Object handler,
+            ModelAndView modelAndView
+          ) throwsException {
+            log.debug("postHandle");
+          }
+          // View가 렌더링된 후
+          // 로그 출력
+          @Override
+          public void afterCompletion(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Object handler,
+            Exception ex
+          ) throwsException {
+            log.debug("afterCompletion");
+          }
+        }
+      ```
+    + `Configuration` : **인터셉터 등록 & 인터셉터의 동작 시점 지정 (메소드가 아닌 URL로 지정)**
+      ```java
+        @Configuration
+        // WebMvcConfigurer 인터페이스를 상속하여 구현
+        public class InterceptorConfig implements WebMvcConfigurer {
+          @Autowired
+          private SignInCheckInterceptor signInCheckInterceptor;
+      
+          @Override
+          public void addInterceptors(InterceptorRegistry registry) {
+            registry.addInterceptor(signInCheckInterceptor) // 인터셉터 추가
+                    .addPathPatterns("/main");  // 인터셉터 동작 시점 지정
+                    // .excludePathPatterns("url"); 을 통해 특정 주소를 제외
+
+            // 인터셉터 등록
+            WebMvcConfigurer.super.addInterceptors(registry);
+          }
+        }
+      ```
 ---
 
 ### 4. File Upload/Download
