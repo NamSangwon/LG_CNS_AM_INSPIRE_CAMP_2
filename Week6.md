@@ -1,5 +1,6 @@
-# 6주차 학습 내용 - 
-
+# 6주차 학습 내용
+### &rarr; `DB Query`, `View Template`, `Session & Cookie`
+---
 ### 1. JPQL
   + ㅁㄴㅇ
   + ㅁ
