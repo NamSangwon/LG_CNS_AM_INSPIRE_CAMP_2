@@ -56,10 +56,10 @@
         	QPerson person = QPerson.person;
           
         	List<Person> personList = jpf
-        								.selectFrom(person)
-        								.where(person.firstName.eq(firstNm)
-        									.and(person.lastName.eq(lastNm))
-        								.fetch();
+                                      .selectFrom(person)
+                                      .where(person.firstName.eq(firstNm)
+                                        .and(person.lastName.eq(lastNm))
+                                      .fetch();
                                         
         	return personList;
         }
@@ -69,7 +69,7 @@
 ### 2. Cascade
   + 영속성 전이 : Entity 간의 연관관계에서 부모 Entity의 상태 변화를 자식 Entity로 전파
     
-  + Entity 상태 종류
+  + **Entity 상태 종류**
     + `Transient` (비영속)
       + 영속성 컨텍스트와 전혀 관계가 없는 상태
       + 객체를 생성만 한 상태
@@ -85,7 +85,7 @@
       + 비영속 상태에 가까움
     + `Removed` (삭제) : 삭제된 상태
       
-  + Cascade 종류
+  + **Cascade 종류**
     + `CascadeType.ALL` : 모든 CASCADE 적용
     + `CascadeType.PERSIST` : 엔티티를 영속화할 때, 연관된 엔티티도 함께 유지
     + `CascadeType.MERGE` : 엔티티 상태를 병합할 때, 연관된 엔티티도 모두 병합
@@ -115,29 +115,48 @@
                     });
         }
     ```
+
+### 3. Native Query
+  + JPA에서 DB에 직접 SQL을 실행시키는 방법
+  + 복잡한 쿼리, DB 함수, 성능 최적화가 필요할 때, 유용하게 사용
+  + 사용 예시
+    ```java
+      public interface LocationRepository extends JpaRepository<Location, Long> {
+       @Query(value = """
+           SELECT id, title, lat, lng,
+               (6371 * acos(
+                   cos(radians(:lat)) * cos(radians(lat)) *
+                   cos(radians(lng) - radians(:lng)) +
+                   sin(radians(:lat)) * sin(radians(lat))
+               )) AS distance
+           FROM point
+           HAVING distance < :radius
+           ORDER BY distance LIMIT 20
+           """, nativeQuery = true)
+       List<Object[]> findNearby(
+           @Param("lat") double lat, @Param("lng") double lng, @Param("radius") double radius);
+      }
+    ```
+  + **문제점**
+    + 코드가 DB에 대한 종속성 증가
+    + SQL Injection 공격의 위험성 증가
+    + 따라서, 필요한 경우에만 사용하고, 쿼리에 사용된 데이터의 유효성 검사 必
 ---
 
-### 3. Eager / Lazy / Fetch Join
+### 4. View Template
+  + **`Thymeleaf`**
+    + a
+      
+  + `JSP`
+    + 
+---
+
+### 5. Session
   + ㅁㄴㅇ
   + ㅁ
 ---
 
-### 4. Native Query
-  + ㅁㄴㅇ
-  + ㅁ
----
-
-### 5. View Template
-  + ㅁㄴㅇ
-  + ㅁ
----
-
-### 6. Session
-  + ㅁㄴㅇ
-  + ㅁ
----
-
-### 7. Cookie
+### 6. Cookie
   + ㅁㄴㅇ
   + ㅁ
 ---
