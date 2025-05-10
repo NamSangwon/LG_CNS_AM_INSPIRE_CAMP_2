@@ -145,15 +145,179 @@
 
 ### 4. View Template
   + **`Thymeleaf`**
-    + a
+    + HTML5 문법을 사용하는 HTML 태그 및 속성 기반의 Template Engine
+    + 스프링부트에서 권장하는 View Template
+    + 텍스트, HTML, XML, JavaScript, CSS 등 사용 가능
+    + Controller에서 Model을 통해 데이터를 넘기고, View에서 받은 데이터를 출력
+   
+    + `${...}` : Variable Expression
+      ```html
+        아이디:<span>[[${user.userId}]]</span><br>
+        이름:<span>[[${user.userName}]]님</span><br>
+        나이:<span>[[${user.userAge}]]세</span><br>
+        <hr>
+        아이디:<span th:text="${user.userId}"></span><br>
+        이름:<span th:text="${user.userName}+ 님"></span><br>
+        나이:<span th:text="${user.userAge}+ 세"></span><br>
+        <hr>
+        아이디:<span data-th-text="${user.userId}"></span><br>
+        이름:<span data-th-text="@{|${user.userName}님|}"></span><br>
+        나이:<span data-th-text="@{|${user.userAge}세|}"></span><br>
+      ```
+      
+    + `th:each` : Iteration
+      ```html
+        <th:block th:each="pageNumber : ${#numbers.sequence(1, 10)}">
+          <span th:text="${pageNumber}"></span>
+        </th:block>
+      ```
+      
+    + `th:if`, `th:unless`, `th:switch` : Condition Evaluation
+      ```html
+        관리자 이름 :
+        <span th:if="${name} != null" th:text="${name}"></span>
+        <span th:unless="${name} != null" th:text="이름없음"></span>
+
+        <!-- 삼항연산자를 통한 출력 값 결정 -->
+        <br> 권한 : <span th:text="${auth} != null ? ${auth} : '권한없음'"></span>
+      
+        <br> 담당 카테고리 :
+        <span th:switch="${category}">
+          <span th:case="1">커뮤니티</span>
+          <span th:case="2">장터</span>
+          <span th:case="3">갤러리</span>
+        </span>
+      ```
+      
+    + `@{ ... }` : Link Url Expression
+      ```html
+        <!-- 1 ~ 10까지의 페이지 (현재 페이지는 span 태그 & 다른 페이지는 a 태그) -->
+        <th:block th:each="pageNumber : ${#numbers.sequence(1, 10)}">
+          <span th:if="${page} == ${pageNumber}" th:text="${pageNumber}"></span>
+          <!-- "/linkUrl?page=?"으로의 링크 -->
+          <a th:unless="${page} == ${pageNumber}" th:href="@{/linkUrl(page=${pageNumber})}"th:text="${pageNumber}"></a>
+        </th:block>
+      ```
+      
+    + Template Layout
+      + 공통으로 사용될 전체/일부 모습을 미리 작성
+        + 공통된 전체 모습은 thymeleaf-layout-dialect라는 3rd-party-library 사용 必
+          ```java
+            // layout1.html 파일 출력
+            @GetMapping("layout1")
+              public String layout1() {
+              return "layout1";
+            }
+            // layout2.html 파일 출력
+            @GetMapping("layout2")
+              public String layout2() {
+              return "layout2";
+            }
+          ```
+          ```html
+            <!-- 바뀔 부분 불러오기 -->
+            <th:block layout:fragment="content"></th:block>
+          ```
+          ```html
+            <!-- layout1.html -->
+            <!-- common/layout.html 파일을 불러오기  -->
+            <html layout:decorate="~{common/layout}">
+              <!-- common/layout.html 파일의 "content"라는 layout:fragment 채우기 -->
+              <div class="container-fluid mt-3" layout:fragment="content">
+                <h3>1번화면</h3>
+                <img src="이미지 주소 링크" style="width: 100%">
+              </div>
+            </html>
+          ```
+          
+        + 공통된 일부 모습은 thymeleaf의 공식 기능
+          ```java
+            // insert1.html 파일 출력
+            @GetMapping("insert1")
+              public String insert1() {
+              return "insert1";
+            }
+          ```
+          ```html
+            <!-- header.html -->
+            <!-- 공통으로 사용될 일부 모습 -->
+            <h2>Accordion Example</h2>
+          ```
+          ```html
+            <!-- insert1.html -->
+            <!-- 공통으로 사용될 일부 모습 불러와서 적용 -->
+            <header th:insert="~{common/header}">  <!-- header 태그 안에 삽입 -->
+            <header th:replace="~{common/header}"> <!-- header 태그를 교체 -->
+          ```
+    + Escape / Unescape
+      + `th:text` : Escape
+        + 특정 문자(예: <, >, &, ", ')를 HTML 엔티티로 변환하여 출력하는 방식
+        + 자바스크립트 주입 공격(XSS)을 방지하기 위해 사용
+      + `th:utext` : Unescape
+        + 특별한 변환없이 원래의 문자를 그대로 출력하는 방식
+        + HTML 태그나 스크립트 코드가 브라우저에 그대로 렌더링
+          + 따라서, 자바스크립트 주입 공격(XSS)에 노출됨
+        + 사용 예
+          + 관리자가 직접 작성한 HTML 콘텐츠를 출력할 때
+          + 서버에서 동적으로 만든 스크립트를 그대로 출력할 때
+          + 외부 에디터(예: CKEditor, TinyMCE)로 작성된 HTML 콘텐츠를 보여줄 때
+      +  사용자 입력은 `th:text` 사용 & 관리자나 확인한 입력은 `th:utext` 사용
       
   + `JSP`
-    + 
+    + Java Server Pages
+    + 값 출력과 간단한 제어문 외에도 자바 코드를 직접 사용할 수 있는 기술 (레거시 시스템)
+      ```html
+        <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+        <body>
+          아이디:<span>${user.userId}</span><br>
+          이름:<span>${user.userName}</span><br>
+          나이:<span>${user.userAge}</span><br>
+        </body>
+      ```
 ---
 
 ### 5. Session
-  + ㅁㄴㅇ
-  + ㅁ
+  + 특징
+    + 클라이언트에 대한 정보를 서버에 저장할 수 있는 공간
+    + 클라이언트가 서버에 접속 후 세션에 접근할 때 공간 생성
+    + 고유한 식별자를 가지며, 클라이언트는 이 식별자를 통해 세션을 유지 (식별자는 클라이언트의 쿠키에 저장)
+    + 설정된 만료시간 이내에 클라이언트의 요청이 없으면 세션 삭제 (Tomcat의 기본 만료시간은 30분)
+    + 세션을 분실하는 경우 새로운 세션을 생성하고 다시 클라이언트로 전송
+    + 클라이언트가 접속되어 있는 동안 내용을 기억해야 하는 경우에 활용
+  + 사용 예시
+    ```java
+      @GetMapping("/login")
+        public String login() {
+        return "login";
+      }
+      @PostMapping("/login")
+      public String loginPost(
+        @ModelAttribute User user,
+        HttpSession session
+      ) {
+        // 세션에 "user"라는 이름으로 user 데이터 저장
+        session.setAttribute("user", user);
+        return "redirect:/main";
+      }
+      @GetMapping("logout")
+      public String logout(HttpSession session) {
+        // 세션 값 제거
+        session.invalidate();
+
+        return "redirect:/login";
+      }
+      @GetMapping("/main")
+      public String main() {
+        return "main";
+      }
+    ```
+    ```html
+      <!-- session.user을 통해 세션에 "user"라는 이름으로 저장된 값에 접근 -->
+      <p th:if="${session.user} != null" th:text="${session.user.userId} + '님 접속 성공'"></p>
+      <p th:unless="${session.user} != null">
+        로그인되어 있지 않습니다.
+      </p>
+    ```
 ---
 
 ### 6. Cookie
