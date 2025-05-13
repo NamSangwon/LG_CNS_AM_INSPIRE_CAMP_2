@@ -21,8 +21,15 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((auth) -> auth
-                // 요청 권한 처리
+        http
+            // // CSRF 설정
+            // .csrf(csrf->csrf
+            //     // CSRF 공격이 들어오더라도 통과 (CSRF 토큰 검사 X)
+            //     // 따라서, 편의성을 위해 개발시에만 적용
+            //     .disable() 
+            // )
+            // 요청 권한 처리
+            .authorizeHttpRequests((auth) -> auth
                     // authenticated() == 로그인 여부 확인
                     .requestMatchers("/admin").authenticated()
                     .requestMatchers("/my-page").authenticated()

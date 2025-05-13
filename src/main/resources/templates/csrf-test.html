@@ -1,0 +1,32 @@
+<head>
+    <meta charset="UTF-8">
+    <!-- CSRF 토큰 발행 -->
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title>CSRF 테스트</title>
+</head>
+
+<body>
+    <h2>Form 전송 (HTML)</h2>
+    <form th:action="@{/submit}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> <!-- CSRF 토큰 -->
+        <button type="submit">폼으로 전송</button>
+    </form>
+    <h2>Fetch 전송 (JS)</h2>
+    <button onclick="sendFetch()">fetch로 전송</button>
+    <script>
+        function sendFetch() {
+            const token = document.querySelector('meta[name="_csrf"]').content; // CSRF 토큰
+            const header = document.querySelector('meta[name="_csrf_header"]').content;
+            fetch("/submit", {
+                method: "POST",
+                headers: {
+                    [header]: token,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ test: "hello" })
+            }).then(res => res.text()).then(console.log)
+                .catch(err => console.error("에러:", err));
+        }
+    </script>
+</body>
