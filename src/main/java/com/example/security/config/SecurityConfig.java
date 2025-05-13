@@ -1,11 +1,14 @@
 package com.example.security.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 public class SecurityConfig {
@@ -28,6 +31,17 @@ public class SecurityConfig {
                     .requestMatchers("/user-page").hasRole("USER")
                     // 위의 요청을 제외한 나머지는 모두 허용
                     .anyRequest().permitAll()
+                )
+                // Cross Origin 설정
+                .cors(cors -> cors
+                    .configurationSource(request -> {
+                        CorsConfiguration config = new CorsConfiguration();
+                        config.setAllowedOrigins(List.of("http://localhost:5500", "http://127.0.0.1:5500"));
+                        config.setAllowedMethods(List.of("GET", "POST"));
+                        config.setAllowCredentials(true);
+                        config.setAllowedHeaders(List.of("*"));
+                        return config;
+                    })
                 )
                 // 로그인 처리
                 .formLogin(form -> form

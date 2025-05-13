@@ -1,0 +1,10 @@
+<body>
+    <button onclick="send()">요청</button>
+    <script>
+        const send = () => {
+            fetch("http://localhost:8080/api/message")
+                .then(res => res.text())
+                .then(data => console.log(data));
+        }
+    </script>
+</body>
