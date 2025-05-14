@@ -1,0 +1,19 @@
+const Header = () => {
+
+    return (
+        <div class="p-5 bg-primary text-white text-center">
+            <h1 th:if="${session.user_info == null}">
+                <a th:href="@{/signin}" class="link-dark">
+                    로그인 후 사용해주세요.
+                </a>
+            </h1>
+            <h1 th:unless="${session.user_info == null}">
+                <a th:href="@{/signout}" class="link-dark">
+                    OO 님 반갑습니다.
+                </a>
+            </h1>
+        </div>
+    );
+};
+
+export default Header;

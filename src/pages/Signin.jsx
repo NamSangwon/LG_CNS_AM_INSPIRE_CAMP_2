@@ -1,0 +1,22 @@
+const Signin = () => {
+    return (<div class="container mt-5">
+        <div class="row">
+            <form method="post" action="/signin">
+                <div class="mb-3 input-group flex-nowrap">
+                    <span class="input-group-text">💻</span>
+                    <input type="text" class="form-control" name="email" placeholder="email" />
+                </div>
+                <div class="mb-3 input-group flex-nowrap">
+                    <span class="input-group-text">🔒</span>
+                    <input type="password" class="form-control" name="pwd" placeholder="password" />
+                </div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" id="signin">Sign In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    );
+}
+
+export default Signin;
