@@ -23,6 +23,10 @@
         <h5 class="card-title" th:text="${board.title}"></h5>
         <h6 class="card-subtitle mb-2 text-muted" th:text="${board.userName}"></h6>
         <p class="card-text" th:text="${board.content}"></p>
+        <!-- N개의 이미지 처리를 위해 수정 必 -->
+        <div>
+          <img th:src="'/download?boardId=' + ${board.id}" />
+        </div>
       </div>
     </div>
   </div>
