@@ -24,7 +24,7 @@
     ```
   + `CSRF`
     + Cross-Site Request Forgery (사이트 간 요청 위조)
-    + 사용자의 의도와 무관하게 인증된 사용자의 권한으로 요청이 전송되게 만드는 공격
+    + **사용자의 의도와 무관하게 인증된 사용자의 권한으로 요청이 전송되게 만드는 공격**
       + 공격자가 사용자의 인증 정보를 몰래 이용해 사용자가 원하지 않는 요청을 서버에 보내도록 유도하는 방식
       + ex) 사용자는 로그인된 상태인데 악성 사이트가 그 사용자의 권한으로 요청을 보냄
     + Spring Security는 기본적으로 CSRF 방어가 설정 (csrf 토큰 없이 요청 불가)
@@ -117,7 +117,7 @@
           }
       }
     ```
-  + JWT 토큰 기반 로그인 인증 필터
+  + **JWT 토큰 기반 로그인 인증 필터**
     + Spring Security 인증 필터 2가지
       + `UsernamePasswordAuthenticationFilter`
         + 폼 로그인 인증을 처리하는 필터
@@ -150,16 +150,53 @@
               UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, List.of());
 
-              // authentication 객체가 Spring Security의 SecurityContext에 저장
+              // ★ authentication 객체가 Spring Security의 SecurityContext에 저장
               // SecurityContext는 현재 요청에 대한 보안 관련 정보를 담음
               // 요청 생명주기 동안 접근 가능
-              // SecurityContext에 Authentication 객체가 설정되면, 컨트롤러에서 사용자 정보를 주입 가능
+              // SecurityContext에 Authentication 객체가 설정되어야만, 컨트롤러에서 사용자 정보를 주입 가능
               SecurityContextHolder.getContext().setAuthentication(authentication);
             }
           }
           filterChain.doFilter(request, response);
         }
       }
+      ```
+    + **클라이언트의 JWT 저장 위치에 따른 전송 방법**
+      1. 쿠키
+         + 서버로 자동 전송 &rarr; CSRF 공격 대비 필요 O
+         + `credential : include header`를 통해 백엔드에서 발행한 토큰을 쿠키에 저장 가능
+      2. 세션/로컬 스토리지
+         + 서버로 자동 전송 X &rarr; CSRF 공격 대비 필요 X
+         + headers: {Authorization : Bearer (token)`을 패킷에 작성
+      
+  + Spring Security 인증 정보 확인 방법
+    1. 컨트롤러 메소드 파라미터에 `Principal` 주입
+    2. 컨트롤러 메소드 파라미터에 `Authentication` 주입
+       + 스프링이 자동으로 현재 인증 객체를 주입
+       + Authentication은 권한, Principal, Details 등 다양한 정보를 포함
+    3. 컨트롤러 메소드 파라미터에 `@AuthenticationPrincipal [커스텀 유저 객체]` 주입
+       + 자동으로 커스텀 유저 객체를 직접 주입받을 수 있음
+    4. `SecurityContextHolder.getContext().getAuthentication()` 메소드 호출
+       + 전통적 방식
+       + 어디서든 static하게 접근 가능 (ex. 서비스, 필터, 유틸 등)
+       + 보안 정보를 명시적으로 꺼낼 때 유용
+    + 사용 예시
+      ```java
+        @GetMapping("/protected")
+        public String protectedArea(
+          Principal principal,
+          Authentication authentication,
+          @AuthenticationPrincipal UserDetails userDetails
+        ) {
+          Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      
+          String s1 = principal.getName();
+          String s2 = authentication.getName();
+          String s3 = userDetails.getUsername();
+          String s4 = auth.getName();
+      
+          return "JWT 인증된 사용자만 접근 가능한 영역입니다.\n" + s1 + s2 + s3 + s4;
+        }
       ```
 ---
 ---
