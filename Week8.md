@@ -199,7 +199,6 @@
         }
       ```
 ---
----
 ### 2. REST API
   + 웹 서비스를 설계하는 데 사용되는 아키텍처 스타일 중 하나
   + 웹에서 데이터를 주고받는 데 사용되는 규칙의 집합
@@ -264,7 +263,67 @@
       + 요청 파라미터 (ex. 경로 변수, 쿼리스트링, 바디 등)
 ---
 ### 3. Web Socket
-  + 
+  + HTTP 통신의 한계를 극복하기 위한 통신 방법
+    + 지속적인 양방형 통신
+      + 최초 연결(핸드셰이크)은 HTTP를 통해 이루어짐
+      + 이후, 웹소켓 프로토콜로 전환
+      + 클라이언트와 서버 간에 항상 연결된 상태를 유지하며 양항향으로 자유롭게 데이터를 송수신
+    + 낮은 오버헤드 : HTTP 요청/응답 헤더와 같은 불필요한 오버헤드 감소. 통신 효율 증가.
+    + 실시간 서비스에 최적화  : 채팅, 게임, 스트리밍 등 실시간 데이터 전송이 필요한 애플리케이션에 매우 적합
+  + 소켓 통신 속성 설정
+    ```java
+      // WebSocketConfigurer 인터페이스를 상속하여 속성 설정
+      @Configuration
+      @EnableWebSocket
+      public class WebSocketConfig implements WebSocketConfigurer {
+
+        // 웹 소켓 핸들러 DI
+        @Autowired
+        private SimpleTextWebSocketHandler handler;
+    
+        @Override
+        public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+          registry.addHandler(handler, "/ws").setAllowedOrigins("웹소켓 연결 주소");
+        }
+      }
+    ```
+  + 웹 소켓 통신 핸들러
+    ```java
+      @Component
+      public class SimpleTextWebSocketHandler extends TextWebSocketHandler {
+        // 연결된 세션들을 저장할 집합 (중복 방지)
+        private final Set<WebSocketSession> sessions = Collections.synchronizedSet(new HashSet<>());
+        // 사용자 첫 연결 후 동작
+        @Override
+        public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+          sessions.add(session); // 새로 접속한 사용자 저장
+          System.out.println("사용자 접속: " + session.getId());
+        }
+        // 사용자로부터 메시지가 수신되었을 때 동작
+        @Override
+        public void handleTextMessage(WebSocketSession session, TextMessage message) throws
+        Exception {
+          String msg = message.getPayload();
+          System.out.println("수신 메시지: " + msg);
+
+          // 모든 세션들로 제시지 전송 (브로드캐스트)
+          for (WebSocketSession s : sessions) {
+            if (s.isOpen()) {
+              s.sendMessage(new TextMessage("[" + session.getId() + "] " + msg));
+            }
+          }
+        }
+        // 사용자 연결 종료 후 동작
+        @Override
+        public void afterConnectionClosed(
+          WebSocketSession session,
+          org.springframework.web.socket.CloseStatus status
+        ) throws Exception {
+          sessions.remove(session); // 연결 종료 시 세션 제거
+          System.out.println("사용자 연결 종료: " + session.getId());
+        }
+      }
+    ```
 ---
 ### 4. Scheduler
   + 
