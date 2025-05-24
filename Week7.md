@@ -257,9 +257,68 @@
 
 ---
 ### 4. File Upload/Download
-  + `Upload`
++ `Upload`
+    + Backend 파일 수신
+      ```java
+        @PostMapping("/upload")
+        @ResponseBody
+        public String uploadPost(
+            // 다중 파일 전송 시, MultipartFile 변수를 배열로 변경 후, 반복문 처리
+            MultipartHttpServletRequest mRequest // 1번 방법
+            @RequestParam("file") MultipartFile mFIle // 2번 방법
+            @ModelAttribute FileInfo info // 3번 방법 (FileInfo 안에 MultipartFile 타입의 FileInfo 변수 존재 必)
+        ) {
+          // 단일 파일 처리
+          String result= "";
+          MultipartFile mFile = mRequest.getFile("file"); // (1번) input 태그 name과 매칭
+          String oName= mFile.getOriginalFilename();
+          result += oName+ "<br>"+ mFile.getSize();
+          return result;
+
+          // 다중 파일 처리 (input의 name이 정해지지 않은 경우)
+          // name이 정해지지 않은 input 태그를 반복
+          Iterator<String> fileNames = mRequest.getFileNames();
+          while(fileNames.hasNext()) {
+            // input 태그 내의 다중 파일 처리
+            String fileName= fileNames.next();
+            List<MultipartFile> mFiles= mRequest.getFiles(fileName);
+            for(MultipartFile mFile:mFiles) {
+              String oName= mFile.getOriginalFilename();
+              long size= mFile.getSize();
+              result+= oName+ " : "+ size+ "<br>";
+              }
+          }
+          return result;
+        }
+      ```
+    + Frontend 파일 송신
+      ```html
+        <form method="post" enctype="multipart/form-data">
+          <!-- 다중 파일 전송 시, multiple 속성 추가 -->
+          <input type="file" name="file"><br> 
+          <input type="submit" value="업로드">
+        </form>
+      ```
     
   + `Download`
+    + Backend 파일 송신
+      ```java
+        @GetMapping("/download")
+        public ResponseEntity<Resource> download() throws Exception {
+          File file = new File("파일 경로");
+      
+          InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+      
+          return ResponseEntity.ok()
+                              .header("content-disposition",
+                                "attachment; filename=\""+
+                                URLEncoder.encode(file.getName(), "utf-8") +"\"")
+                                          .contentLength(file.length()
+                              )
+                              .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                              .body(resource);
+        }
+      ```
 ---
 
 ### 5. UUID
