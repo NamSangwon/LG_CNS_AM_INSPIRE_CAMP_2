@@ -286,7 +286,7 @@
               String oName= mFile.getOriginalFilename();
               long size= mFile.getSize();
               result+= oName+ " : "+ size+ "<br>";
-              }
+            }
           }
           return result;
         }
@@ -295,12 +295,14 @@
       ```html
         <form method="post" enctype="multipart/form-data">
           <!-- 다중 파일 전송 시, multiple 속성 추가 -->
-          <input type="file" name="file"><br> 
+          <input type="file" name="file"><br> <!-- input 태그 여러 개 전송 가능 -->
           <input type="submit" value="업로드">
         </form>
       ```
     
   + `Download`
+    + 다운로드 되는 파일의 형식에 따라 브라우저가 반응할 수 있도록 **Response Header에 `Content-Type` 지정** 필요 (application/octet-stream)
+    + `Content-Type` : HTTP 헤더에서 사용되며 클라이언트와 서버 간의 통신에서 데이터 유형 명시
     + Backend 파일 송신
       ```java
         @GetMapping("/download")
@@ -311,27 +313,101 @@
       
           return ResponseEntity.ok()
                               .header("content-disposition",
-                                "attachment; filename=\""+
-                                URLEncoder.encode(file.getName(), "utf-8") +"\"")
-                                          .contentLength(file.length()
+                                "attachment; filename=\""+ URLEncoder.encode(file.getName(), "utf-8") +"\"").contentLength(file.length()
                               )
+                              
                               .contentType(MediaType.APPLICATION_OCTET_STREAM)
                               .body(resource);
         }
       ```
+  + **`UUID`**
+    + 고유한 값을 만들기 위해 사용되는 128 bit 식별자
+    + 충돌 없이 고유한 값을 보장해야 할 때 사용
+    + 파일 중복 처리
+      + UUID로 변경된 파일 명과 원본 파일명을 DB에 저장
+      + 사용자가 파일을 다운로드 시, 변경된 파일명으로 파일을 찾고 원본 파일명으로 파일을 저장
 ---
 
-### 5. UUID
-  + ㅁㄴㅇ
-  + ㅁ
+### 5. JWT
+  + JSON Web Token
+  + [ 특징 ]
+    + JSON 데이터를 Base64 인코딩을 통해 직렬화
+    + 사용자를 인증하고 식별하기 위한 값
+    + 서버에서 발급하고 클라이언트에 저장
+    + 토큰에 사용자 정보를 포함하는 것이 가능
+    + 데이터가 많아지면, 토큰의 길이가 길어질 수 있음
+  + 형태
+    ![image](https://github.com/user-attachments/assets/83b833cb-a7ae-4089-9fb1-27d8cc08b871)
+    + `header` : 토큰 타입 및 암호화 알고리즘 정보
+    + `payload`
+      + `claim` : 토큰의 정보 중 한 조각 (key-value 쌍으로 구성)
+      + `claim 상태`
+        + `Registered Claim`
+          + 토큰에 대한 정보를 담음
+          + 정해진 key를 사용
+          + ex) iss(발급자=서비스 도메인), aud(수신자=클라이언트 ID), sub(주제=사용자 고유 ID), exp(만료시간)
+        + `Public Claim`
+          + 다른 토큰과의 충돌 방지
+          + URI 형식 사용
+          + ex) { "http://ggoreb.com" : true }
+        + `Private Claim`
+          + 서버와 클라이언트 간의 데이터 전송을 위해 사용
+          + ex) { "username" : "ggoreb", "level" : 1 }
+    + `signature` : Header의 base64 인코딩 값과 Payload base64 인코딩 값을 합친 후, 서명키로 다시 해싱한 값
+    + JWT의 서명 만으로 위조 방지는 가능하나 암호화는 아님
+  + 사용 예시
+    + 인코딩
+      ```java
+        void stringToBase64() {
+          String text= "jwt test";
+          String encodedString = Base64.getEncoder().encodeToString(text.getBytes());
+        }
+      ```
+    + 디코딩
+      ```java
+        void base64ToString() {
+          byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+          String decodedString = new String(decodedBytes);
+        }
+      ```
+    + JWT 생성
+      ```java
+        voidcreateJwt() {
+          SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+          byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqr");
+          Keysigning Key= new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
+          JwtBuilder builder= Jwts.builder()
+                                    // Header
+                                    .setHeaderParam("typ", "JWT")
+                                    // Payload -Registered Claim
+                                    .setSubject("제목").setIssuer("ggoreb.com").setAudience("service user")
+                                    // Payload -Secret Claim
+                                    .claim("username", "ggoreb").claim("password", 1234).claim("hasPermission", "ADMIN")
+                                    // Signature
+                                    .signWith(signingKey, signatureAlgorithm);
+          long now= System.currentTimeMillis();
+          builder.setExpiration(newDate(now+ 3600000)); // 1시간 뒤 토큰 유효기간 만료
+          String token= builder.compact();
+          log.info("jwt {}", token);
+        }
+      ```
+    + JWT 확인
+      ```java
+        JwsHeader<?> header = jwtParser.parseClaimsJws(jwt).getHeader();
+        String algorithm = header.getAlgorithm();
+        String type= header.getType();
+      
+        Claims claims= jwtParser.parseClaimsJws(jwt).getBody();
+        log.info("Subject {}", claims.getSubject());
+        log.info("Issuer {}", claims.getIssuer());
+        log.info("Audience {}", claims.getAudience());
+        log.info("claim {}", claims.get("username"));
+        log.info("claim {}", claims.get("password"));
+        log.info("claim {}", claims.get("hasPermission"));
+      ```
 ---
 
-### 6. JWT
-  + ㅁㄴㅇ
-  + ㅁ
----
-
-### 7. Spring Security
+### 6. Spring Security
   + ㅁㄴㅇ
   + ㅁ
 ---
