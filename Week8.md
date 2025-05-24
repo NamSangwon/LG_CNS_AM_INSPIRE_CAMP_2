@@ -326,5 +326,38 @@
     ```
 ---
 ### 4. Scheduler
-  + 
----
+  + 애플리케이션 내에서 특정 작업을 정해진 시간에 자동으로 실행하거나, 주기적으로 반복 실행할 수 있도록 도와주는 기능
+  + ex) 배치 처리, 데이터 동기화, 알림 발송 등 다양한 주기적인 작업에 활용
+  + `@Scheduled` 어노테이션을 사용하여 스케줄링 기능을 제공
+  + 스케줄러 속성 설정 (스케줄러 활성화)
+    ```java
+      @Configuration
+      @EnableScheduling // 스프링 스케줄링 기능 활성화
+      public class MySchedulerConfig {
+      }
+    ```
+  + 스케줄 작업 클래스
+    ```java
+      @Component
+      public class MySimpleTask {
+        @Scheduled(fixedRate = 3000) // 3초마다 실행
+        public void printHello() {
+          System.out.println("안녕하세요! 3초마다 자동 실행 중입니다.");
+        }
+      }
+    ```
+  + 실행 간격 지정 방식
+    + `fixedRate` : 이전 작업이 시작된 시점부터 다음 작업 시작까지의 지연 시간 지정 (polling)
+    + `fixedDelay` : 이전 작업이 종료된 시점부터 다음 작업 시작까지의 지연 시간 지정 (long polling)
+    + `cron` : Cron 표현식을 사용하여 정확한 시간과 요일을 지정
+      + Cron 표현식은 "초 분 시 일 월 요일 [년도]" 순서로 구성
+      + ex. cron = "0 0 10 * * ?" (매일 오전 10시 0분 0초에 실행)
+      + |위치|의미|예시|
+        |:--:|:--:|:--:|
+        |1|초(0-59)|0/10 &rarr; 10초마다|
+        |2|분(0-59)|0 &rarr; 정각 실행|
+        |3|시(0-23)|9 &rarr; 오전 9시|
+        |4|일(1-31)|* &rarr; 매일|
+        |5|월(1-12)|* &rarr; 매월|
+        |6|요일(0-6)|* &rarr; 매주|
+ ---
