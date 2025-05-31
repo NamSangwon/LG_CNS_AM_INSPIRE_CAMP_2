@@ -97,11 +97,39 @@
         + admin 프로세스 코드는 동기화 문제를 피하기 위해 어플리케이션 코드와 함께 배포
   + **`필요 기술`**
     + `Service Discovery`
+      ![image](https://github.com/user-attachments/assets/9e132836-175b-4720-a3e7-5285437f439c)
+      + **각각의 마이크로 서비스가 동적으로 확장/축소될 때마다 해당 서비스의 정보(IP, Port)를 수동으로 업데이트 해야하는 점이 불편한 점을 해결하기 위한 서비스**
+      + `Service Registry` : 서비스의 위치(IP, Port 등)를 저장 및 관리하는 서비스의 주소록
+      + [작동 순서]
+        1. 서비스 등록
+           + 서비스 시작 시, 인스턴스 정보를 Service Registry에 등록
+           + 서비스 종료 시, Service Registry에서 해제
+           + 주기적으로 HeartBeat 신호를 통해 서비스 생존 여부를 Service Registry에 알림
+        2. 서비스 조회
+           + 다른 서비스가 특정 서비스와 통신할 때, Service Registry에 서비스 이름 질의
+           + Service Registry는 요청된 서비스의 활성화된 인스턴스들의 IP 및 포트 정보 반환
+        3. 서비스 사용
+           + 서비스 소비자 Service Registry로부터 받은 정보를 통해 통신 시작
     + `Client LoadBalancer`
+      ![image](https://github.com/user-attachments/assets/a0b01abc-aa6b-4cc0-95af-cc271ea2e8fb)
+      + 클라이언트에 탑재되어 있는 Load Balancer
+      + **서비스를 호출하는 애플리케이션이 직접 로드 밸런싱 로직을 가지고 요청을 분산하는 방식**
+      + Service Discovery Server에서 N 개의 Service Discovery Client 정보를 받아 온 후, 그 정보를 바탕으로 Round Robin 과 같은 알고리즘을 통해 로드 밸런싱
+      + Hardware 가 필요 없이 Software 로만 가능
+      + IP와 PORT가 아닌 서비스 이름으로 호출
     + `API Gateway`
+      ![image](https://github.com/user-attachments/assets/99d205df-7fc1-4809-94be-5ba713fae291)
+      + 모든 서버로의 요청을 단일지점을 거쳐서 처리
+      + **사용자가 설정한 엔드포인트로 외부 요청을 라우팅 하는 역할**
+      + 클라이언트는 직접 마이크로 서비스에 요청을 보내지 않고 API Gateway에 요청
+      + 기능 : 인증 및 권한 부여, 라우팅, 속도 제한, 부하 분산, 로깅 추적, 공통 로직 처리 등
     + `Container`
+      + 소프트웨어 및 관련 라이브러리, 시스템 도구, 코드 및 런타임 요소들을 패키징하여 격리된 실행 환경을 제공하는 기술
     + `Container Orchestration`
+      + 많은 컨테이너화된 애플리케이션의 배포, 관리, 확장 및 네트워킹을 자동화하는 프로세스
     + `CI/CD`
+      + 지속적 통합 및 지속적 배포 (Continuous Integration & Continuous Deployment)
+      + 자동 빌드 및 테스트 수행 후 배포
 ---
 ### 2. 클라우드 네이티브
 ---
