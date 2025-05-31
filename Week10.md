@@ -34,30 +34,67 @@
       + 마이크로 서비스들 끼리 계속 서로 통신 &rarr; 통신 오류 가능성 ↑
       + 전체 서비스를 테스트하기 위해 여러 개의 마이크로 서비스를 구동 必 &rarr; 테스트 불편성 ↑
   + **12 Factors**
-    1. 코드 베이스 (Codebase)
-       + 
-    2. 의존성 명시 (Dependencies)
-       + 
-    3. 설정 분리 (Config)
-       + 
-    4. 백엔드 서비스 (Backing Services)
-       + 
-    5. 빌드, 출시, 배포 (Build, Release, Run)
-       + 
-    6. 프로세스 (Process)
-       + 
-    7. 포트 바인딩 (Port Binding)
-       + 
-    8. 동시성 (Concurrency)
-       + 
-    9. 폐기 가능 (Disposability)
-       + 
-    10. 개발/프로덕션 환경 일치 (Dev/Prod Parity)
-       + 
-    11. 로그 (Logs)
-       + 
-    12. 관리자 프로세스 (Admin Processes)
-       + 
+    1. `코드 베이스 (Codebase)`
+       + 어플리케이션 당 1개의 코드베이스
+       + 각 어플리케이션은 1개의 코드베이스를 통해 운영/개발에 배포
+    2. `의존성 명시 (Dependencies)`
+       + 어플리케이션은 모든 종속성을 명시적으로 선언 (ex. build.gradle, pom.xml, requirements.txt, etc)
+       + 종속성은 외부 환경과 분리 (ex. `Docker`)
+    3. `설정 분리 (Config)`
+       + 어플리케이션 내 설정 값을 소스코드에서 분리하여 독립적으로 관리 (ex. DB 설정, URL, 인증 정보 등)
+       + MSA 환경에서의 Config 파일 관리 방법
+         + Spring Cloud Config
+         + Kubernetes ConfigMap
+    4. `백엔드 서비스 (Backing Services)`
+       + 로컬 및 서드파티 서비스를 구별하지 않고 모두 연결된 리소스로 취급
+       + 리소스들은 자유롭게 연결되거나 분리하여 코드 수정 없이 전환 가능해야 함
+       + ex. DB를 MySQL에서 Amazon RDS로 코드 수정 없이 전환 가능해야 함
+    5. `빌드, 출시, 배포 (Build, Release, Run)`
+       + 코드 베이스는 (build > release > run) 세 단계를 거쳐 배포
+       + 각 단계는 엄격하게 분리 必
+         + `Build`
+           + build.gradle
+         + `Release`
+           + Jenkinsfile
+           + Artifact -> Docker Image -> Container Registry
+         + `Run (Deploy)`
+           + Kubernetes Deployment
+           + Container Registry -> Kubernetes
+    6. `프로세스 (Process)`
+       + 어플리케이션은 하나 이상의 무상태성 프로세스로 실행 가능해야 함
+       + 무상태성 : 어플리케이션 내부의 디스크 및 메모리에 저장하는 쿠키나 세션등을 갖지 않는 상태
+       + 유지될 필요가 있는 데이터는 DB or Cache 같은 백엔드 서비스에 저장 必
+    7. `포트 바인딩 (Port Binding)`
+       + 배포된 어플리케이션을 다른 어플리케이션에서 접근할 수 있도록 공개 必
+       + 포트 바인딩을 통해 서비스 공개
+         + 컨테이너 기반으로 한 서버 내에서 다양한 서비스가 독립적으로 수행
+           + 자기 완비적 : 내장 톰캣을 통한 자가 실행
+         + 포트 바인딩을 통해 개별 포트로 들어오는 요청을 처리
+    8. `동시성 (Concurrency)`
+       + 각 어플리케이션을 수평으로 확장 가능해야 함 &rarr; Scale Out
+       + Scale Out : 서비스를 여러 개 구동하여 시스템을 확장
+       + Scale Up : 기존 서버의 사양을 업그레이드해 시스템을 확장
+    9. `폐기 가능 (Disposability)`
+       + MSA 환경에서 각 어플리케이션들은 빈번하게 시작되고 종료됨
+         + 간단하게 바로 시작하거나 종료될 수 있는 탄력성 必
+         + `Graceful shutdown`: Shutdown 시 DB lock 등으로 타 프로세스에 영향을 주어서는 안됨
+           + 새로운 요청을 받지 않음
+           + 진행 중인 요청 마무리 (트랜잭션 Commit or Rollback)
+           + 자원 정리 후 앱 종료 (DB Connection 등)
+    10. `개발/프로덕션 환경 일치 (Dev/Prod Parity)`
+       + Dev, Staging, Production 환경을 최대한 동일하게 유지
+         + 배포 시간의 차이를 최소화: 개발자가 작성한 코드는 몇 시간 또는 몇 십분 내에 배포
+         + 담당자의 차이를 최소화: 개발자가 Production 모니터링에 깊게 관여
+         + 툴의 차이를 최소화: Dev, Staging, Production 환경을 최대한 비슷하게 유지
+    11. `로그 (Logs)`
+       + 로그를 이벤트 스트림으로 취급
+       + 로그를 로컬 파일에 저장 X
+         + 어플리케이션은 언제든지 생성/삭제 가능 &rarr; 로컬에 저장된 로그 파일은 초기화됨
+       + 중앙 집중식 로그 (`EFK` 사용)
+    12. `관리자 프로세스 (Admin Processes)`
+       + 일회성 admin 프로세스 : 다른 프로세스들처럼 코드베이스와 설정을 기반으로 함
+         + 일회성 admin 프로세스 예 : DB 마이그레이션, 일회성 스크립트 등
+       + admin 프로세스 코드는 동기화 문제를 피하기 위해 어플리케이션 코드와 함께 배포
 ---
 ### 2. 클라우드 네이티브
 ---
