@@ -1,6 +1,8 @@
 # 10주차 학습 내용
 
 ### 1. MSA
+  ![image](https://github.com/user-attachments/assets/e36e74b7-2795-4d94-b968-568c60261fac)
+
   + **`Monolothic Architecture`**
     + **모든 업무 로직이 하나의 애플리케이션 형태로 패키징되어 서비스**
     + **장점**
@@ -34,6 +36,7 @@
       + 마이크로 서비스들 끼리 계속 서로 통신 &rarr; 통신 오류 가능성 ↑
       + 전체 서비스를 테스트하기 위해 여러 개의 마이크로 서비스를 구동 必 &rarr; 테스트 불편성 ↑
   + **12 Factors**
+    ![image](https://github.com/user-attachments/assets/4a7a4a82-1ad2-47ad-b57f-ab285e8ae565)
     1. `코드 베이스 (Codebase)`
        + 어플리케이션 당 1개의 코드베이스
        + 각 어플리케이션은 1개의 코드베이스를 통해 운영/개발에 배포
@@ -97,6 +100,8 @@
         + admin 프로세스 코드는 동기화 문제를 피하기 위해 어플리케이션 코드와 함께 배포
 ---
 ### 2. MSA 필요 기술
+  ![image](https://github.com/user-attachments/assets/06bbf6a7-ed6d-47a2-a0d0-403ffccc7cf1)
+
   + `Service Discovery`
     ![image](https://github.com/user-attachments/assets/9e132836-175b-4720-a3e7-5285437f439c)
     + **각각의 마이크로 서비스가 동적으로 확장/축소될 때마다 해당 서비스의 정보(IP, Port)를 수동으로 업데이트 해야하는 점이 불편한 점을 해결하기 위한 서비스**
