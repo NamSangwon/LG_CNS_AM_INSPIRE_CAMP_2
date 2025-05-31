@@ -233,23 +233,23 @@
       + 서로에게 영향을 주지 않고 격리된 환경에서 동작
   + [작동 방식]
     1. `Dockerfile` 작성
-      + 개발자가 애플리케이션에 필요한 환경과 설정 등을 Dockerfile에 정의
+       + 개발자가 애플리케이션에 필요한 환경과 설정 등을 Dockerfile에 정의
     2. `Docker Image` 빌드
-      + `docker build` 명령어를 통해 `Dockerfile`로부터 `Docker Image`를 생성
+       + `docker build` 명령어를 통해 `Dockerfile`로부터 `Docker Image`를 생성
     3. `Docker Image` 저장 및 공유
-      + 생성된 이미지는 Docker Hub(공개 레지스트리) 및 사설(Private) 레지스트리에 저장
-      + 다른 개발자나 서버에서 쉽게 가져다 사용
-      + `docker pull` 명령어를 통해 Container Repository에서 `Docker Image` pull
+       + 생성된 이미지는 Docker Hub(공개 레지스트리) 및 사설(Private) 레지스트리에 저장
+       + 다른 개발자나 서버에서 쉽게 가져다 사용
+       + `docker pull` 명령어를 통해 Container Repository에서 `Docker Image` pull
     4. `Docker Image` 조회
-      + `docker images`를 통해 로컬에 저장된 `Docker Image` 조회
+       + `docker images`를 통해 로컬에 저장된 `Docker Image` 조회
     5. `Docker Container` 실행
-      + `docker run` 명령어를 통헤 `Docker Image`를 기반으로 `Docker Container`를 실행
-      + 로컬에 이미지가 있다면, 해당 이미지로 실행
-      + 로컬에 이미지가 없으면, Container Repository에서 다운로드 후 실행
+       + `docker run` 명령어를 통헤 `Docker Image`를 기반으로 `Docker Container`를 실행
+       + 로컬에 이미지가 있다면, 해당 이미지로 실행
+       + 로컬에 이미지가 없으면, Container Repository에서 다운로드 후 실행
     6. `Docker Container` 조회
-      + `docker ps` 명령어를 통해 실행(Up) 중인 `Docker Container` 조회
+       + `docker ps` 명령어를 통해 실행(Up) 중인 `Docker Container` 조회
     7. `Docker Container` 종료
-      + `docker stop` 명령어를 통해 실행 중인 `Docker Container` 종료
+       + `docker stop` 명령어를 통해 실행 중인 `Docker Container` 종료
 ---
 ### 5. Spring Cloud MSA
 ---
