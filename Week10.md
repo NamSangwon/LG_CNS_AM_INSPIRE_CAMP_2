@@ -251,5 +251,3 @@
     7. `Docker Container` 종료
        + `docker stop` 명령어를 통해 실행 중인 `Docker Container` 종료
 ---
-### 5. Spring Cloud MSA
----
